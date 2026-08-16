@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-500: #3c50e0;
+  --color-primary: #3c50e0;
+  --color-secondary: #80CAEE;
+  
+  --color-stroke: #E2E8F0;
+  --color-black: #1C2434;
+  --color-black-2: #010101;
+  
+  /* Background Colors */
+  --color-body: #64748B;
+  --color-bodydark: #AEB7C0;
+  --color-bodydark1: #DEE4EE;
+  --color-bodydark2: #8A99AF;
+  
+  --color-gray-1: #F1F5F9;
+  --color-gray-2: #F7F9FC;
+  --color-gray-3: #FAFAFA;
+}
+
+body {
+  background-color: var(--color-gray-1);
+  color: var(--color-body);
+}
+
+.dark body {
+  background-color: var(--color-black);
+  color: var(--color-bodydark);
+}
+
+
+/* ApexCharts Dark Mode Overrides */
+.dark .apexcharts-text tspan {
+  fill: #8A99AF !important;
+}
+.dark .apexcharts-gridline {
+  stroke: #2E3A47 !important;
+}
+.dark .apexcharts-legend-text {
+  color: #8A99AF !important;
+}
+.dark .apexcharts-tooltip {
+  background: #24303F !important;
+  border-color: #2E3A47 !important;
+  color: #FFFFFF !important;
+}
+.dark .apexcharts-tooltip-title {
+  background: #1A222C !important;
+  border-color: #2E3A47 !important;
+}
+.dark .apexcharts-xcrosshairs, .dark .apexcharts-ycrosshairs {
+  fill: #2E3A47 !important;
+  stroke: #2E3A47 !important;
+}

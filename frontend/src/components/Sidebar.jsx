@@ -1,0 +1,260 @@
+import { NavLink } from 'react-router-dom';
+import { LayoutDashboard, ShoppingCart, Calendar, User, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown } from 'lucide-react';
+
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  return (
+    <aside
+      className={`absolute left-0 top-0 z-50 flex h-screen flex-col overflow-y-hidden bg-white dark:bg-[#24303F] border-r border-stroke dark:border-[#2E3A47] duration-300 ease-linear lg:static lg:translate-x-0 ${
+        sidebarOpen 
+          ? 'translate-x-0 w-72 lg:w-0 lg:border-none lg:opacity-0 lg:overflow-hidden' 
+          : '-translate-x-full w-72 lg:w-72'
+      }`}
+    >
+      {/* Sidebar Header */}
+      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5 mt-5">
+        <NavLink to="/" className="flex items-center gap-3">
+          <div className="bg-[#3C50E0] p-1.5 rounded-lg w-9 h-9 flex items-center justify-center">
+            {/* Custom Logo approximation */}
+            <div className="flex gap-0.5 items-end h-4">
+              <div className="w-1 h-3 bg-white dark:bg-[#24303F] rounded-sm"></div>
+              <div className="w-1 h-4 bg-white dark:bg-[#24303F] rounded-sm"></div>
+              <div className="w-1 h-2 bg-white dark:bg-[#24303F] rounded-sm"></div>
+            </div>
+          </div>
+          <span className="text-[#1C2434] dark:text-white text-2xl font-bold">TailAdmin</span>
+        </NavLink>
+      </div>
+
+      {/* Sidebar Menu */}
+      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+        <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+          <div>
+            <h3 className="mb-4 ml-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">MENU</h3>
+            
+            <ul className="mb-6 flex flex-col gap-1.5">
+              {/* Dashboard Dropdown (Expanded) */}
+              <li>
+                <div className="group relative flex items-center justify-between gap-2.5 rounded-sm bg-[#F1F5F9] dark:bg-[#1A222C] py-2 px-4 font-medium text-[#3C50E0] cursor-pointer">
+                  <div className="flex items-center gap-2.5">
+                    <LayoutDashboard className="w-5 h-5" />
+                    Dashboard
+                  </div>
+                  <ChevronUp className="w-4 h-4" />
+                </div>
+                {/* Dropdown Items */}
+                <div className="mt-2 pl-9 pr-4">
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink
+                        to="/ecommerce"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive || window.location.pathname === '/' 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        eCommerce
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/analytics"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Analytics
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/marketing"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Marketing
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/crm"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        CRM
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/stocks"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Stocks
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/saas"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        SaaS
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/logistics"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Logistics
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/ai"
+                        className={({ isActive }) =>
+                          `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        AI
+                        <span className="rounded-md bg-[#3C50E0] px-2 py-0.5 text-xs font-medium text-white">Pro</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/sales"
+                        className={({ isActive }) =>
+                          `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Sales
+                        <span className="rounded-md bg-[#10B981]/10 px-2 py-0.5 text-xs font-medium text-[#10B981]">NEW</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/finance"
+                        className={({ isActive }) =>
+                          `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Finance
+                        <span className="rounded-md bg-[#10B981]/10 px-2 py-0.5 text-xs font-medium text-[#10B981]">NEW</span>
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              {/* Other Items */}
+              <li>
+                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <div className="flex items-center gap-2.5">
+                    <ShoppingCart className="w-5 h-5" />
+                    E-commerce
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </a>
+              </li>
+              <li>
+                <a href="#" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <Calendar className="w-5 h-5" />
+                  Calendar
+                </a>
+              </li>
+              <li>
+                <NavLink to="/profile" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <User className="w-5 h-5" />
+                  User Profile
+                </NavLink>
+              </li>
+              <li>
+                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <div className="flex items-center gap-2.5">
+                    <CheckSquare className="w-5 h-5" />
+                    Task
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </a>
+              </li>
+              <li>
+                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <div className="flex items-center gap-2.5">
+                    <FileText className="w-5 h-5" />
+                    Forms
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </a>
+              </li>
+              <li>
+                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <div className="flex items-center gap-2.5">
+                    <Table className="w-5 h-5" />
+                    Tables
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </a>
+              </li>
+              <li>
+                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                  <div className="flex items-center gap-2.5">
+                    <File className="w-5 h-5" />
+                    Pages
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;

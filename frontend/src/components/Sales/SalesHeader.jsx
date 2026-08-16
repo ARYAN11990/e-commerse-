@@ -1,0 +1,42 @@
+import { useState, useEffect } from 'react';
+import { Calendar, Filter, Download } from 'lucide-react';
+import { api } from '../../services/api';
+
+const SalesHeader = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/sales/header')
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  if (!data) return <div className="animate-pulse h-[60px] mb-4 md:mb-6 2xl:mb-7.5" />;
+
+  return (
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6 2xl:mb-7.5">
+      <div>
+        <h2 className="text-2xl font-bold text-[#1C2434] dark:text-white">{data.title}</h2>
+        <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{data.subtitle}</p>
+      </div>
+      
+      <div className="flex items-center gap-3 w-full sm:w-auto">
+        <button className="flex items-center gap-2 rounded-md border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] px-4 py-2 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] flex-1 sm:flex-none">
+          <Calendar className="w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
+          {data.date_range}
+        </button>
+        <button className="flex items-center gap-2 rounded-md border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] px-4 py-2 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]">
+          <Filter className="w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
+          Filter
+        </button>
+        <button className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 text-sm font-medium text-white hover:bg-blue-600">
+          <Download className="w-4 h-4" />
+          Export
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default SalesHeader;
