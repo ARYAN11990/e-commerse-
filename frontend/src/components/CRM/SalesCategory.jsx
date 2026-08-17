@@ -7,8 +7,7 @@ const SalesCategory = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/sales-category')
-      .then((res) => res.json())
+    api.get('/crm/sales-category')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

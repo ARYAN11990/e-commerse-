@@ -7,8 +7,7 @@ const FinanceBalance = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/finance/balance')
-      .then((res) => res.json())
+    api.get('/finance/balance')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

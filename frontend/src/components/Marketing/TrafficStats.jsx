@@ -24,8 +24,7 @@ const TrafficStats = () => {
   const [period, setPeriod] = useState('Today');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/marketing/traffic-stats')
-      .then((res) => res.json())
+    api.get('/marketing/traffic-stats')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

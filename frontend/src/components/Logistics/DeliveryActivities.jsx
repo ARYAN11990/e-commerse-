@@ -6,8 +6,7 @@ const DeliveryActivities = () => {
   const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/logistics/activities')
-      .then((res) => res.json())
+    api.get('/logistics/activities')
       .then((data) => setActivities(data))
       .catch((err) => console.error(err));
   }, []);

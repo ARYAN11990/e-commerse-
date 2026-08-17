@@ -7,8 +7,7 @@ const APITokenUsages = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/ai/token-usages')
-      .then((res) => res.json())
+    api.get('/ai/token-usages')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

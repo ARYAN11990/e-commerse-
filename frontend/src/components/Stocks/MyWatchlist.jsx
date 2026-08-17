@@ -6,8 +6,7 @@ const MyWatchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/watchlist')
-      .then((res) => res.json())
+    api.get('/stocks/watchlist')
       .then((data) => setWatchlist(data))
       .catch((err) => console.error(err));
   }, []);

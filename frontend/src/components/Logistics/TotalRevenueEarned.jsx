@@ -7,8 +7,7 @@ const TotalRevenueEarned = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/logistics/revenue-earned')
-      .then((res) => res.json())
+    api.get('/logistics/revenue-earned')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -7,8 +7,7 @@ const ActiveUsers = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/active-users')
-      .then((res) => res.json())
+    api.get('/analytics/active-users')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

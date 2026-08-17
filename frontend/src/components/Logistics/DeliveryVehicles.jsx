@@ -6,8 +6,7 @@ const DeliveryVehicles = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/logistics/delivery-vehicles')
-      .then((res) => res.json())
+    api.get('/logistics/delivery-vehicles')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -7,8 +7,7 @@ const PortfolioPerformance = () => {
   const [period, setPeriod] = useState('Monthly');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/portfolio-performance')
-      .then((res) => res.json())
+    api.get('/stocks/portfolio-performance')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

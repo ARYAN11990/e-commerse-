@@ -7,8 +7,7 @@ const SalesStatistics = () => {
   const [period, setPeriod] = useState('Daily');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/statistics')
-      .then((res) => res.json())
+    api.get('/sales/statistics')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -7,8 +7,7 @@ const SessionsByDevice = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/sessions-by-device')
-      .then((res) => res.json())
+    api.get('/analytics/sessions-by-device')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

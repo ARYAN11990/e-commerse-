@@ -7,8 +7,7 @@ const Dividend = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/dividend')
-      .then((res) => res.json())
+    api.get('/stocks/dividend')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

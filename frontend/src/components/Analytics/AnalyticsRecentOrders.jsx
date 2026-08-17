@@ -19,8 +19,7 @@ const AnalyticsRecentOrders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/recent-orders')
-      .then((res) => res.json())
+    api.get('/analytics/recent-orders')
       .then((data) => setOrders(data))
       .catch((err) => console.error(err));
   }, []);

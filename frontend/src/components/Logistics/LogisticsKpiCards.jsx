@@ -6,8 +6,7 @@ const LogisticsKpiCards = () => {
   const [kpis, setKpis] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/logistics/kpis')
-      .then((res) => res.json())
+    api.get('/logistics/kpis')
       .then((data) => setKpis(data))
       .catch((err) => console.error(err));
   }, []);

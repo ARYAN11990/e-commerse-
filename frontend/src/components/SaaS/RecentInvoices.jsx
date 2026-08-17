@@ -5,8 +5,7 @@ const RecentInvoices = () => {
   const [invoices, setInvoices] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/recent-invoices')
-      .then((res) => res.json())
+    api.get('/saas/recent-invoices')
       .then((data) => setInvoices(data))
       .catch((err) => console.error(err));
   }, []);

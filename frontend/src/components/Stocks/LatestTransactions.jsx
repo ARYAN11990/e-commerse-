@@ -6,8 +6,7 @@ const LatestTransactions = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/latest-transactions')
-      .then((res) => res.json())
+    api.get('/stocks/latest-transactions')
       .then((data) => setTransactions(data))
       .catch((err) => console.error(err));
   }, []);

@@ -6,8 +6,7 @@ const ProjectsAnalytics = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/ai/projects-analytics')
-      .then((res) => res.json())
+    api.get('/ai/projects-analytics')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

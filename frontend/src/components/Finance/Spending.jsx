@@ -5,8 +5,7 @@ const Spending = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/finance/spending')
-      .then((res) => res.json())
+    api.get('/finance/spending')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

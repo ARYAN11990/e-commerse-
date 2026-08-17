@@ -7,8 +7,7 @@ const EstimatedRevenue = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/estimated-revenue')
-      .then((res) => res.json())
+    api.get('/crm/estimated-revenue')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

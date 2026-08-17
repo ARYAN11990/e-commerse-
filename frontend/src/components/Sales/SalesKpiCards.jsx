@@ -7,8 +7,7 @@ const SalesKpiCards = () => {
   const [kpis, setKpis] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/kpis')
-      .then((res) => res.json())
+    api.get('/sales/kpis')
       .then((data) => setKpis(data))
       .catch((err) => console.error(err));
   }, []);

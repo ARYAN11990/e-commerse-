@@ -6,8 +6,7 @@ const SalesByCountry = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/country')
-      .then((res) => res.json())
+    api.get('/sales/country')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

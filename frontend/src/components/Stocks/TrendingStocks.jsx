@@ -7,8 +7,7 @@ const TrendingStocks = () => {
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/trending-stocks')
-      .then((res) => res.json())
+    api.get('/stocks/trending-stocks')
       .then((data) => setTrending(data))
       .catch((err) => console.error(err));
   }, []);

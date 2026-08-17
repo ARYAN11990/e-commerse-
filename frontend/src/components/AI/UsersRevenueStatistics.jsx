@@ -7,8 +7,7 @@ const UsersRevenueStatistics = () => {
   const [period, setPeriod] = useState('Monthly');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/ai/statistics')
-      .then((res) => res.json())
+    api.get('/ai/statistics')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

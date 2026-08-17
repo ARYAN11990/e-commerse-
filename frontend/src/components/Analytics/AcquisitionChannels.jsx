@@ -7,8 +7,7 @@ const AcquisitionChannels = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/acquisition-channels')
-      .then((res) => res.json())
+    api.get('/analytics/acquisition-channels')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

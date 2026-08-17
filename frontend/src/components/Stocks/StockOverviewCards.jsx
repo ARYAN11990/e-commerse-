@@ -5,8 +5,7 @@ const StockOverviewCards = () => {
   const [stocks, setStocks] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/stocks/overview')
-      .then((res) => res.json())
+    api.get('/stocks/overview')
       .then((data) => setStocks(data))
       .catch((err) => console.error(err));
   }, []);

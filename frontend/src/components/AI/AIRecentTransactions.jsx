@@ -6,8 +6,7 @@ const AIRecentTransactions = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/ai/recent-transactions')
-      .then((res) => res.json())
+    api.get('/ai/recent-transactions')
       .then((data) => setTransactions(data))
       .catch((err) => console.error(err));
   }, []);

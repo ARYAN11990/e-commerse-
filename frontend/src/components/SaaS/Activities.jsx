@@ -6,8 +6,7 @@ const Activities = () => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/activities')
-      .then((res) => res.json())
+    api.get('/saas/activities')
       .then((data) => setActivities(data))
       .catch((err) => console.error(err));
   }, []);

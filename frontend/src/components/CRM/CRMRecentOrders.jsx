@@ -6,8 +6,7 @@ const CRMRecentOrders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/recent-orders')
-      .then((res) => res.json())
+    api.get('/crm/recent-orders')
       .then((data) => setOrders(data))
       .catch((err) => console.error(err));
   }, []);

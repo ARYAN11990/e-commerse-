@@ -7,8 +7,7 @@ const UserGrowth = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/user-growth')
-      .then((res) => res.json())
+    api.get('/saas/user-growth')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

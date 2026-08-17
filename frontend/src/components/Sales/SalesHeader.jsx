@@ -6,8 +6,7 @@ const SalesHeader = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/header')
-      .then((res) => res.json())
+    api.get('/sales/header')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -6,8 +6,7 @@ const FeaturedCampaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/marketing/featured-campaigns')
-      .then((res) => res.json())
+    api.get('/marketing/featured-campaigns')
       .then((data) => setCampaigns(data))
       .catch((err) => console.error(err));
   }, []);

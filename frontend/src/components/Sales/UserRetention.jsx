@@ -7,8 +7,7 @@ const UserRetention = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/retention')
-      .then((res) => res.json())
+    api.get('/sales/retention')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

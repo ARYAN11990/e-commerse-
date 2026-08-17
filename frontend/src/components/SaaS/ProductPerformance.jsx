@@ -8,8 +8,7 @@ const ProductPerformance = () => {
   const [tab, setTab] = useState('Daily Sales');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/product-performance')
-      .then((res) => res.json())
+    api.get('/saas/product-performance')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

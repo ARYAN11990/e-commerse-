@@ -6,8 +6,7 @@ const SaaSOverview = () => {
   const [period, setPeriod] = useState('Monthly');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/overview')
-      .then((res) => res.json())
+    api.get('/saas/overview')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

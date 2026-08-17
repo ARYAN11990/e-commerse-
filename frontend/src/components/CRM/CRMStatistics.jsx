@@ -7,8 +7,7 @@ const CRMStatistics = () => {
   const [period, setPeriod] = useState('Monthly');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/statistics')
-      .then((res) => res.json())
+    api.get('/crm/statistics')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

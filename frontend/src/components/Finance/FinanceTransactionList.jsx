@@ -6,8 +6,7 @@ const FinanceTransactionList = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/finance/transaction-list')
-      .then((res) => res.json())
+    api.get('/finance/transaction-list')
       .then((data) => setTransactions(data))
       .catch((err) => console.error(err));
   }, []);

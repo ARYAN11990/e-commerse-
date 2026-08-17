@@ -6,8 +6,7 @@ const TopChannels = () => {
   const [channels, setChannels] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/top-channels')
-      .then((res) => res.json())
+    api.get('/analytics/top-channels')
       .then((data) => setChannels(data))
       .catch((err) => console.error(err));
   }, []);

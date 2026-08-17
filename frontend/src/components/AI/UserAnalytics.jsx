@@ -6,8 +6,7 @@ const UserAnalytics = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/ai/user-analytics')
-      .then((res) => res.json())
+    api.get('/ai/user-analytics')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -6,8 +6,7 @@ const TopTrafficSource = () => {
   const [sources, setSources] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/marketing/top-traffic-source')
-      .then((res) => res.json())
+    api.get('/marketing/top-traffic-source')
       .then((data) => setSources(data))
       .catch((err) => console.error(err));
   }, []);

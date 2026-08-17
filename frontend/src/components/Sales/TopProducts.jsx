@@ -5,8 +5,7 @@ const TopProducts = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/top-products')
-      .then((res) => res.json())
+    api.get('/sales/top-products')
       .then((data) => setProducts(data))
       .catch((err) => console.error(err));
   }, []);

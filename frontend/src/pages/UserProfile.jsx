@@ -29,11 +29,7 @@ const UserProfile = () => {
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8000/api/profile/', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(profileForm)
-    })
+    api.put('/profile/', profileForm)
       .then(() => {
         setEditProfileOpen(false);
         fetchProfileData();
@@ -42,11 +38,7 @@ const UserProfile = () => {
 
   const handleUpdateAddress = (e) => {
     e.preventDefault();
-    fetch('http://localhost:8000/api/profile/address', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(addressForm)
-    })
+    api.put('/profile/address', addressForm)
       .then(() => {
         setEditAddressOpen(false);
         fetchProfileData();

@@ -5,8 +5,7 @@ const CRMKpiCards = () => {
   const [kpis, setKpis] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/kpis')
-      .then((res) => res.json())
+    api.get('/crm/kpis')
       .then((data) => setKpis(data))
       .catch((err) => console.error(err));
   }, []);

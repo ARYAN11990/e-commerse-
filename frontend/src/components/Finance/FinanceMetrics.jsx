@@ -6,8 +6,7 @@ const FinanceMetrics = () => {
   const [metrics, setMetrics] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/finance/metrics')
-      .then((res) => res.json())
+    api.get('/finance/metrics')
       .then((data) => setMetrics(data))
       .catch((err) => console.error(err));
   }, []);

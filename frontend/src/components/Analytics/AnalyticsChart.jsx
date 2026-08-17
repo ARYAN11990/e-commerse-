@@ -7,8 +7,7 @@ const AnalyticsChart = () => {
   const [period, setPeriod] = useState('30 days');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/visitor-analytics')
-      .then((res) => res.json())
+    api.get('/analytics/visitor-analytics')
       .then((data) => setChartData(data))
       .catch((err) => console.error(err));
   }, []);

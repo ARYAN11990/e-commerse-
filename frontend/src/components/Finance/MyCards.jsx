@@ -6,8 +6,7 @@ const MyCards = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/finance/cards')
-      .then((res) => res.json())
+    api.get('/finance/cards')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

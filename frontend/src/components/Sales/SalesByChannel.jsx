@@ -6,8 +6,7 @@ const SalesByChannel = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/sales/channel')
-      .then((res) => res.json())
+    api.get('/sales/channel')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

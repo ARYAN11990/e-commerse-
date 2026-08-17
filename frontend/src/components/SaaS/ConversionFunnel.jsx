@@ -7,8 +7,7 @@ const ConversionFunnel = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/conversion-funnel')
-      .then((res) => res.json())
+    api.get('/saas/conversion-funnel')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

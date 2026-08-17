@@ -6,8 +6,7 @@ const UpcomingSchedule = () => {
   const [schedule, setSchedule] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/crm/upcoming-schedule')
-      .then((res) => res.json())
+    api.get('/crm/upcoming-schedule')
       .then((data) => setSchedule(data))
       .catch((err) => console.error(err));
   }, []);

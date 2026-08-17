@@ -6,8 +6,7 @@ const ImpressionTraffic = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/marketing/impression-traffic')
-      .then((res) => res.json())
+    api.get('/marketing/impression-traffic')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

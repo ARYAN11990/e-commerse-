@@ -404,10 +404,10 @@ def generate_ecommerce_state():
                 }
             ]
         },
-        "recent_orders": _generate_transactions(5)
+        "recent_orders": _generate_ecommerce_transactions(5)
     }
 
-def _generate_transactions(count=5):
+def _generate_ecommerce_transactions(count=5):
     statuses = ["Delivered", "Pending", "Canceled"]
     products = [
         {"name": "Macbook pro 13\"", "cat": "Laptop", "img": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=100&q=80", "price": 2399},
@@ -519,11 +519,11 @@ def generate_finance_state():
                 {"id": 7, "avatar": "avatar7", "name": "User 7"}
             ]
         },
-        "transaction_list": _generate_transactions(5),
+        "transaction_list": _generate_finance_transactions(5),
         "recent_transactions": _generate_recent(5)
     }
 
-def _generate_transactions(count=5):
+def _generate_finance_transactions(count=5):
     items = [
         {"title": "Payment Received", "sub": "Cashback from Stellar Rewards", "type": "positive", "icon": "stellar"},
         {"title": "Netflix Subscription", "sub": "September subscription charge", "type": "negative", "icon": "netflix"},

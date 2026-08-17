@@ -6,8 +6,7 @@ const TrackingDelivery = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/logistics/tracking')
-      .then((res) => res.json())
+    api.get('/logistics/tracking')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);

@@ -6,8 +6,7 @@ const TopPages = () => {
   const [pages, setPages] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/analytics/top-pages')
-      .then((res) => res.json())
+    api.get('/analytics/top-pages')
       .then((data) => setPages(data))
       .catch((err) => console.error(err));
   }, []);

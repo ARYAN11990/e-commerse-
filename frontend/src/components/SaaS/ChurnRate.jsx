@@ -7,8 +7,7 @@ const ChurnRate = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/saas/churn-rate')
-      .then((res) => res.json())
+    api.get('/saas/churn-rate')
       .then((data) => setData(data))
       .catch((err) => console.error(err));
   }, []);
