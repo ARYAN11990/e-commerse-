@@ -4,15 +4,21 @@ import { Form } from '../components/Form/Form';
 import { Input } from '../components/Form/Input';
 import { Select } from '../components/Form/Select';
 import { api } from '../services/api';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Trash2 } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
+import { useToast } from '../context/ToastContext';
 
 const Users = () => {
+  const { showToast } = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
   
   const fetchUsers = async () => {
     setLoading(true);
@@ -34,9 +40,26 @@ const Users = () => {
   const handleDelete = async (user) => {
     try {
       await api.delete(`/users/${user.id}`);
+      showToast('User deleted successfully', 'success');
       fetchUsers();
     } catch (err) {
-      alert(err.message || 'Failed to delete user');
+      showToast(err.message || 'Failed to delete user', 'error');
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      // In a real app, you would have a bulk delete endpoint. 
+      // Here we simulate it by deleting one by one via the mock provider.
+      for (const user of selectedUsers) {
+        await api.delete(`/users/${user.id}`);
+      }
+      showToast(`${selectedUsers.length} users deleted successfully`, 'success');
+      setSelectedUsers([]);
+      setBulkDeleteModalOpen(false);
+      fetchUsers();
+    } catch (err) {
+      showToast(err.message || 'Failed to perform bulk delete', 'error');
     }
   };
 
@@ -58,14 +81,15 @@ const Users = () => {
   const handleSubmit = async (values, { setApiError }) => {
     try {
       if (editingUser) {
-        // Remove password if empty during edit, or omit it from update payload
         const payload = { ...values };
         if (!payload.password) {
             delete payload.password;
         }
         await api.put(`/users/${editingUser.id}`, payload);
+        showToast('User updated successfully', 'success');
       } else {
         await api.post('/users', values);
+        showToast('User created successfully', 'success');
       }
       handleCloseModal();
       fetchUsers();
@@ -106,6 +130,11 @@ const Users = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'role', label: 'Role', options: ['Admin', 'Manager', 'Employee', 'Customer'] },
+    { key: 'status', label: 'Status', options: ['Active', 'Inactive'] }
+  ];
+
   return (
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
       {/* Breadcrumb */}
@@ -122,10 +151,21 @@ const Users = () => {
       </div>
 
       {/* Header Actions */}
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          {selectedUsers.length > 0 && (
+            <button 
+              onClick={() => setBulkDeleteModalOpen(true)}
+              className="flex items-center gap-2 rounded-md bg-[#EF4444] px-4 py-2 font-medium text-white hover:bg-opacity-90 transition"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Selected ({selectedUsers.length})
+            </button>
+          )}
+        </div>
         <button 
           onClick={handleOpenAdd}
-          className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 font-medium text-white hover:bg-opacity-90"
+          className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 font-medium text-white hover:bg-opacity-90 transition"
         >
           <Plus className="w-4 h-4" />
           Add User
@@ -137,6 +177,10 @@ const Users = () => {
         columns={columns}
         data={users}
         searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
+        selectable={true}
+        onSelectionChange={setSelectedUsers}
         loading={loading}
         error={error}
         onRetry={fetchUsers}
@@ -207,6 +251,16 @@ const Users = () => {
           </div>
         </div>
       )}
+      {/* Bulk Delete Confirm Modal */}
+      <ConfirmModal 
+        isOpen={bulkDeleteModalOpen}
+        onClose={() => setBulkDeleteModalOpen(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete Multiple Users"
+        message={`Are you sure you want to delete ${selectedUsers.length} users? This action cannot be undone.`}
+        confirmText="Delete Users"
+        isDanger={true}
+      />
     </div>
   );
 };

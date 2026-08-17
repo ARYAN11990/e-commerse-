@@ -33,7 +33,7 @@ const TotalRevenueEarned = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse flex flex-col pt-2 justify-between">
             <div className="flex justify-between items-start mb-6">

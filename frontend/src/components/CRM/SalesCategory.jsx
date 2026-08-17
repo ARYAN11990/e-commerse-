@@ -70,7 +70,7 @@ const SalesCategory = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="flex flex-col sm:flex-row justify-center items-center gap-8 mt-8 animate-pulse">
             <div className="w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700"></div>

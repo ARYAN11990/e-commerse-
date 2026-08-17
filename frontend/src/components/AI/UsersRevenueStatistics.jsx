@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
@@ -55,7 +56,7 @@ const UsersRevenueStatistics = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse flex flex-col pt-2">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -104,7 +105,7 @@ const UsersRevenueStatistics = () => {
 
         {data?.categories && data?.series && (
           <div id="usersRevenueChart" className="-ml-5 flex-1 flex flex-col justify-end">
-            <ReactApexChart options={{...options, xaxis: { ...options.xaxis, categories: data.categories }}} series={data.series} type="area" height={320} />
+            <ReactApexChart options={{...options, xaxis: { ...options.xaxis, categories: data?.categories }}} series={data?.series} type="area" height={320} />
           </div>
         )}
       </DataState>

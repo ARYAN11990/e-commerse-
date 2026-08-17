@@ -52,6 +52,10 @@ const AnalyticsRecentOrders = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'country', label: 'Country', options: ['us', 'gb', 'fr', 'de', 'fi', 'be', 'in'] }
+  ];
+
   return (
     <div className="h-full">
       <DataTable
@@ -61,7 +65,9 @@ const AnalyticsRecentOrders = () => {
         loading={loading}
         error={error}
         onRetry={fetchOrders}
-        searchable={false}
+        searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
         headerClassName="h-full"
       />
     </div>

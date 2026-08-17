@@ -77,6 +77,10 @@ const CRMRecentOrders = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'status', label: 'Status', options: ['Complete', 'Pending', 'Cancel'] }
+  ];
+
   return (
     <div className="mt-4 md:mt-6 2xl:mt-7.5">
       <DataTable
@@ -87,6 +91,8 @@ const CRMRecentOrders = () => {
         error={error}
         onRetry={fetchOrders}
         searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
         selectable={true}
         onDelete={handleDelete}
       />

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
@@ -17,7 +18,7 @@ const CRMStatistics = () => {
     dataLabels: { enabled: false },
     stroke: { curve: 'smooth', width: 2 },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '12px' } }
@@ -52,7 +53,7 @@ const CRMStatistics = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse pt-2">
             <div className="flex gap-8 mb-4">

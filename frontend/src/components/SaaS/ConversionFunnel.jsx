@@ -26,7 +26,7 @@ const ConversionFunnel = () => {
     dataLabels: { enabled: false },
     stroke: { width: 0 },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '12px' } }
@@ -60,7 +60,7 @@ const ConversionFunnel = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse pt-2">
             <div className="h-[320px] w-full flex items-end justify-between px-4 pb-4">

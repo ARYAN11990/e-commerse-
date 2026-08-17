@@ -42,7 +42,7 @@ const EstimatedRevenue = () => {
             fontWeight: 'bold',
             show: true,
             formatter: function() {
-              return data.goal_value;
+              return data?.goal_value || 0;
             }
           }
         }

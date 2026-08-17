@@ -54,6 +54,10 @@ const RecentOrders = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'status', label: 'Status', options: ['Delivered', 'Pending', 'Canceled'] }
+  ];
+
   return (
     <div className="h-full">
       <DataTable
@@ -63,6 +67,9 @@ const RecentOrders = () => {
         loading={loading}
         error={error}
         onRetry={fetchOrders}
+        searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
         headerClassName="h-full"
       />
     </div>

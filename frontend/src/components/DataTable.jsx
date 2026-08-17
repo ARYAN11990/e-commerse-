@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Search, ChevronDown, ChevronUp, MoreHorizontal, Eye, Edit, Trash2, AlertCircle, Loader2 } from 'lucide-react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { Search, ChevronDown, ChevronUp, MoreHorizontal, Eye, Edit, Trash2, AlertCircle, Loader2, X } from 'lucide-react';
 
 const DataTable = ({
   columns,
@@ -8,6 +8,7 @@ const DataTable = ({
   searchable = false,
   showFilter = true,
   searchPlaceholder = "Search...",
+  filterOptions = [],
   selectable = false,
   onSelectionChange,
   onView,
@@ -31,18 +32,44 @@ const DataTable = ({
   const [rowToDelete, setRowToDelete] = useState(null);
   const [actionMenuOpen, setActionMenuOpen] = useState(null); // Store row index for open menu
 
+  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({});
+  const filterDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
+        setFilterDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Filtering
   const filteredData = useMemo(() => {
-    if (!searchQuery) return data;
+    const safeData = data || [];
+    let result = safeData;
+
+    if (Object.keys(activeFilters).length > 0) {
+      result = result.filter(row => {
+        return Object.entries(activeFilters).every(([key, values]) => {
+          if (!values || values.length === 0) return true;
+          return values.includes(row[key]);
+        });
+      });
+    }
+
+    if (!searchQuery) return result;
     const lowerQuery = searchQuery.toLowerCase();
-    return data.filter(row => {
+    return result.filter(row => {
       return columns.some(col => {
         if (!col.accessor) return false;
         const val = row[col.accessor];
         return val != null && String(val).toLowerCase().includes(lowerQuery);
       });
     });
-  }, [data, searchQuery, columns]);
+  }, [data, searchQuery, columns, activeFilters]);
 
   // Sorting
   const sortedData = useMemo(() => {
@@ -111,6 +138,30 @@ const DataTable = ({
     setRowToDelete(null);
   };
 
+  const handleFilterChange = (key, value) => {
+    setActiveFilters(prev => {
+      const current = prev[key] || [];
+      const updated = current.includes(value) 
+        ? current.filter(v => v !== value)
+        : [...current, value];
+      
+      if (updated.length === 0) {
+        const newState = { ...prev };
+        delete newState[key];
+        return newState;
+      }
+      return { ...prev, [key]: updated };
+    });
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setActiveFilters({});
+    setCurrentPage(1);
+  };
+
+  const activeFilterCount = Object.values(activeFilters).reduce((acc, curr) => acc + curr.length, 0);
+
   return (
     <div className={`rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] shadow-sm ${headerClassName}`}>
       {/* Header */}
@@ -133,13 +184,58 @@ const DataTable = ({
                 />
               </div>
             )}
-            {showFilter && (
-              <button className="flex items-center gap-1 rounded-md border border-stroke dark:border-[#2E3A47] px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-[#313D4A] whitespace-nowrap text-[#64748B] dark:text-[#8A99AF]">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0.583374 2.33333C0.583374 1.689 1.10571 1.16667 1.75004 1.16667H12.25C12.8944 1.16667 13.4167 1.689 13.4167 2.33333C13.4167 2.59392 13.2952 2.8398 13.0886 2.99478L8.75004 6.24838V11.0833C8.75004 11.5305 8.44147 11.9168 8.00662 12.0155L6.25662 12.4131C5.62688 12.5562 5.03337 12.0768 5.03337 11.4325V6.24838L0.694828 2.99478C0.48819 2.8398 0.583374 2.59392 0.583374 2.33333Z" fill="currentColor"/>
-                </svg>
-                Filter
-              </button>
+            {showFilter && filterOptions.length > 0 && (
+              <div className="relative" ref={filterDropdownRef}>
+                <button 
+                  onClick={() => setFilterDropdownOpen(!filterDropdownOpen)}
+                  className={`flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition whitespace-nowrap ${
+                    activeFilterCount > 0 
+                      ? 'border-[#3C50E0] bg-[#3C50E0]/10 text-[#3C50E0] dark:border-[#3C50E0] dark:bg-[#3C50E0]/20' 
+                      : 'border-stroke text-[#64748B] hover:bg-gray-50 dark:border-[#2E3A47] dark:text-[#8A99AF] dark:hover:bg-[#313D4A]'
+                  }`}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.583374 2.33333C0.583374 1.689 1.10571 1.16667 1.75004 1.16667H12.25C12.8944 1.16667 13.4167 1.689 13.4167 2.33333C13.4167 2.59392 13.2952 2.8398 13.0886 2.99478L8.75004 6.24838V11.0833C8.75004 11.5305 8.44147 11.9168 8.00662 12.0155L6.25662 12.4131C5.62688 12.5562 5.03337 12.0768 5.03337 11.4325V6.24838L0.694828 2.99478C0.48819 2.8398 0.583374 2.59392 0.583374 2.33333Z" fill="currentColor"/>
+                  </svg>
+                  Filter {activeFilterCount > 0 && `(${activeFilterCount})`}
+                </button>
+                
+                {filterDropdownOpen && (
+                  <div className="absolute right-0 top-full z-40 mt-2 w-64 rounded-md border border-stroke bg-white shadow-default dark:border-[#2E3A47] dark:bg-[#24303F]">
+                    <div className="p-4">
+                      <div className="mb-4 flex items-center justify-between">
+                        <h5 className="font-semibold text-[#1C2434] dark:text-white">Filters</h5>
+                        {activeFilterCount > 0 && (
+                          <button onClick={clearFilters} className="text-xs text-[#3C50E0] hover:underline">
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
+                        {filterOptions.map((filter) => (
+                          <div key={filter.key}>
+                            <h6 className="mb-2 text-sm font-medium text-[#1C2434] dark:text-white">{filter.label}</h6>
+                            <div className="flex flex-col gap-2">
+                              {filter.options.map((option) => (
+                                <label key={option} className="flex cursor-pointer items-center gap-2 text-sm text-[#64748B] dark:text-[#8A99AF]">
+                                  <input 
+                                    type="checkbox" 
+                                    className="rounded border-stroke focus:ring-[#3C50E0] text-[#3C50E0] dark:border-[#2E3A47]"
+                                    checked={(activeFilters[filter.key] || []).includes(option)}
+                                    onChange={() => handleFilterChange(filter.key, option)}
+                                  />
+                                  {option}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

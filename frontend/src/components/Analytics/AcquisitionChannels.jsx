@@ -26,7 +26,7 @@ const AcquisitionChannels = () => {
     dataLabels: { enabled: false },
     stroke: { width: 0 },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '12px' } }
@@ -78,7 +78,7 @@ const AcquisitionChannels = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-[350px] w-full animate-pulse flex items-end gap-3 px-4 pb-4 mt-6">
             <div className="h-2/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>

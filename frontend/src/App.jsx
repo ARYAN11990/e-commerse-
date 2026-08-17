@@ -4,7 +4,9 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 
 const ECommerce = lazy(() => import('./pages/ECommerce'));
 const Analytics = lazy(() => import('./pages/Analytics'));
@@ -35,10 +37,11 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F1F5F9] dark:bg-[#1A222C] text-[#64748B] dark:text-[#8A99AF] font-inter">
-      {!isAuthPage && <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
-      
-      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+    <ToastProvider>
+      <div className="flex h-screen overflow-hidden bg-[#F1F5F9] dark:bg-[#1A222C] text-[#64748B] dark:text-[#8A99AF] font-inter">
+        {!isAuthPage && <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
+        
+        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         {!isAuthPage && <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
         
         <main>
@@ -48,33 +51,36 @@ function App() {
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-[#3C50E0] border-t-transparent"></div>
               </div>
             }>
-              <Routes>
-                {/* Public Auth Routes */}
-                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-                <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-                <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+              <ErrorBoundary>
+                <Routes>
+                  {/* Public Auth Routes */}
+                  <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                  <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+                  <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+                  <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
 
-                {/* Protected Dashboard Routes */}
-                <Route path="/" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
-                <Route path="/ecommerce" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
-                <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-                <Route path="/marketing" element={<ProtectedRoute><Marketing /></ProtectedRoute>} />
-                <Route path="/crm" element={<ProtectedRoute><CRM /></ProtectedRoute>} />
-                <Route path="/stocks" element={<ProtectedRoute><Stocks /></ProtectedRoute>} />
-                <Route path="/saas" element={<ProtectedRoute><SaaS /></ProtectedRoute>} />
-                <Route path="/logistics" element={<ProtectedRoute><Logistics /></ProtectedRoute>} />
-                <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
-                <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
-                <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-                <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
-              </Routes>
+                  {/* Protected Dashboard Routes */}
+                  <Route path="/" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
+                  <Route path="/ecommerce" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
+                  <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+                  <Route path="/marketing" element={<ProtectedRoute><Marketing /></ProtectedRoute>} />
+                  <Route path="/crm" element={<ProtectedRoute><CRM /></ProtectedRoute>} />
+                  <Route path="/stocks" element={<ProtectedRoute><Stocks /></ProtectedRoute>} />
+                  <Route path="/saas" element={<ProtectedRoute><SaaS /></ProtectedRoute>} />
+                  <Route path="/logistics" element={<ProtectedRoute><Logistics /></ProtectedRoute>} />
+                  <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
+                  <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
+                  <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                  <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+                </Routes>
+              </ErrorBoundary>
             </Suspense>
           </div>
         </main>
       </div>
     </div>
+    </ToastProvider>
   );
 }
 

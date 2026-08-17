@@ -1,8 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, ShoppingCart, Calendar, User, Users, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const [dashboardOpen, setDashboardOpen] = useState(true);
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && sidebarOpen) {
@@ -52,15 +54,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* Dashboard Dropdown (Expanded) */}
               <li>
-                <div className="group relative flex items-center justify-between gap-2.5 rounded-sm bg-[#F1F5F9] dark:bg-[#1A222C] py-2 px-4 font-medium text-[#3C50E0] cursor-pointer">
+                <div 
+                  className={`group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium cursor-pointer ${
+                    dashboardOpen 
+                      ? 'bg-[#F1F5F9] dark:bg-[#1A222C] text-[#3C50E0]' 
+                      : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                  }`}
+                  onClick={() => setDashboardOpen(!dashboardOpen)}
+                >
                   <div className="flex items-center gap-2.5">
                     <LayoutDashboard className="w-5 h-5" />
                     Dashboard
                   </div>
-                  <ChevronUp className="w-4 h-4" />
+                  {dashboardOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
                 </div>
                 {/* Dropdown Items */}
-                <div className="mt-2 pl-9 pr-4">
+                <div className={`mt-2 pl-9 pr-4 ${dashboardOpen ? 'block' : 'hidden'}`}>
                   <ul className="flex flex-col gap-1.5">
                     <li>
                       <NavLink

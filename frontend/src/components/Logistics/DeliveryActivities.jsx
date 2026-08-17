@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -102,7 +103,7 @@ const DeliveryActivities = () => {
               </tr>
             </thead>
             <tbody>
-              {activities.map((item, index) => (
+              {(activities || []).map((item, index) => (
                 <tr key={index} className="border-b border-stroke dark:border-[#2E3A47] last:border-0 hover:bg-gray-50 dark:hover:bg-[#313D4A]/50">
                   <td className="py-4 pl-4 text-center">
                     <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#3C50E0]" />

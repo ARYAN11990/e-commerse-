@@ -20,7 +20,7 @@ const AnalyticsKpiCards = () => {
         isEmpty={!kpis}
         skeleton={<div className="animate-pulse h-[120px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47]" />}
       >
-        {kpiList.map((item) => {
+        {kpis && kpiList.map((item) => {
           const data = kpis ? kpis[item.key] : null;
           if (!data) return null;
           const trend = data.trend;

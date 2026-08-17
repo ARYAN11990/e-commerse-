@@ -38,7 +38,7 @@ const StockOverviewCards = () => {
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 2xl:gap-7.5 mb-4 md:mb-6 2xl:mb-7.5">
-        {stocks.map((stock, index) => {
+        {(stocks || []).map((stock, index) => {
           const trend = stock.trend;
 
           return (

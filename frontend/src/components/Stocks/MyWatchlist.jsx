@@ -48,7 +48,7 @@ const MyWatchlist = () => {
         }
       >
         <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar pb-4">
-          {watchlist.map((item, index) => {
+          {(watchlist || []).map((item, index) => {
             const trend = item.trend;
             return (
               <div key={index} className="flex items-center justify-between border-b border-stroke dark:border-[#2E3A47] py-3 last:border-b-0">

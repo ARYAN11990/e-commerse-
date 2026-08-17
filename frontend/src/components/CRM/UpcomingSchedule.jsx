@@ -34,7 +34,7 @@ const UpcomingSchedule = () => {
         }
       >
         <div className="flex flex-col gap-6 mt-6">
-          {schedule.map((item, idx) => (
+          {(schedule || []).map((item, idx) => (
             <div key={item.id} className="flex gap-4">
               <div className="pt-1">
                 <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#3C50E0] focus:ring-[#3C50E0]" />

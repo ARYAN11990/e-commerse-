@@ -33,7 +33,7 @@ const UserGrowth = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="flex flex-col animate-pulse pt-2 justify-between flex-1">
             <div className="flex items-end justify-between mt-auto">

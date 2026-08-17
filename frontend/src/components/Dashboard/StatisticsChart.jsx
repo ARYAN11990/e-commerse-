@@ -30,7 +30,7 @@ const StatisticsChart = () => {
     },
     xaxis: {
       type: 'category',
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B' } }
@@ -78,7 +78,7 @@ const StatisticsChart = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-[250px] w-full animate-pulse flex items-end">
             <div className="h-full w-full bg-gradient-to-t from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-t opacity-50"></div>

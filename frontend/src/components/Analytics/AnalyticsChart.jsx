@@ -25,7 +25,7 @@ const AnalyticsChart = () => {
     dataLabels: { enabled: false },
     stroke: { show: true, width: 4, colors: ['transparent'] },
     xaxis: {
-      categories: chartData.categories,
+      categories: chartData?.categories || [],
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: {
@@ -54,7 +54,7 @@ const AnalyticsChart = () => {
 
   const series = [{
     name: 'Visitors',
-    data: chartData.data
+    data: chartData?.data || []
   }];
 
   return (

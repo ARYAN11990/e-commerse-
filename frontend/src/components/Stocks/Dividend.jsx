@@ -24,7 +24,7 @@ const Dividend = () => {
     dataLabels: { enabled: false },
     stroke: { show: true, width: 4, colors: ['transparent'] },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '10px' } }
@@ -50,7 +50,7 @@ const Dividend = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-[200px] w-full animate-pulse flex items-end gap-2 px-2 pb-2">
             {[1, 2, 3, 4, 5, 6].map(i => (

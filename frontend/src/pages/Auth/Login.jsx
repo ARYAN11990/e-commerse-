@@ -29,7 +29,7 @@ const Login = () => {
         </h2>
         
         <Form 
-          initialValues={{ username: '', password: '' }} 
+          initialValues={{ username: 'admin', password: 'admin123' }} 
           validationRules={validationRules} 
           onSubmit={handleSubmit}
         >

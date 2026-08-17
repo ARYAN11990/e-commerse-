@@ -25,7 +25,7 @@ const MonthlySales = () => {
     dataLabels: { enabled: false },
     stroke: { show: true, width: 4, colors: ['transparent'] },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B' } }
@@ -50,7 +50,7 @@ const MonthlySales = () => {
 
   const series = [{
     name: 'Sales',
-    data: data.data
+    data: data?.data
   }];
 
   return (
@@ -68,7 +68,7 @@ const MonthlySales = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.data || data.data.length === 0} 
+        isEmpty={!data || !data?.data || data?.data.length === 0} 
         skeleton={
           <div className="h-[220px] w-full animate-pulse flex items-end gap-2 px-4 pb-4">
             <div className="h-1/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>

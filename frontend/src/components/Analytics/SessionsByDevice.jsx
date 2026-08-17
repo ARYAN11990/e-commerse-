@@ -46,7 +46,7 @@ const SessionsByDevice = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="flex flex-col items-center animate-pulse pt-4">
             <div className="h-[200px] w-[200px] rounded-full bg-gray-200 dark:bg-gray-700"></div>

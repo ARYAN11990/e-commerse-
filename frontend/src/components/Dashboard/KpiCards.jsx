@@ -32,7 +32,7 @@ const KpiCards = () => {
         </div>
       </>
     }>
-      {kpis.map((kpi, idx) => {
+      {data && kpis.map((kpi, idx) => {
         const itemData = data[kpi.key];
         const trend = itemData.trend;
 

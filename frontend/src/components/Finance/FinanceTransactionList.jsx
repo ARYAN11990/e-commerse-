@@ -50,7 +50,7 @@ const FinanceTransactionList = () => {
         <h4 className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] mb-4">Recent Transactions</h4>
 
         <div className="flex flex-col gap-4 flex-1 overflow-y-auto pr-2 no-scrollbar">
-          {transactions.map((tx) => (
+          {(transactions || []).map((tx) => (
             <div key={tx.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gray-50 dark:bg-[#313D4A] border border-stroke dark:border-[#2E3A47]">

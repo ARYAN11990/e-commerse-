@@ -40,7 +40,7 @@ const TopPages = () => {
             </div>
           </div>
 
-          {pages.map((page, key) => (
+          {(pages || []).map((page, key) => (
             <div
               className={`grid grid-cols-2 ${
                 key === pages.length - 1 ? '' : 'border-b border-stroke dark:border-[#2E3A47]'

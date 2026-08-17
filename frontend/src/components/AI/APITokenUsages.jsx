@@ -12,7 +12,7 @@ const APITokenUsages = () => {
       fontFamily: 'Inter, sans-serif',
     },
     colors: ['#3C50E0', '#6577F3', '#8FD0EF'],
-    labels: data.platforms.map(p => p.name),
+    labels: data?.platforms?.map(p => p.name) || [],
     legend: { show: false },
     plotOptions: {
       pie: {
@@ -27,7 +27,7 @@ const APITokenUsages = () => {
               fontSize: '24px',
               fontWeight: 700,
               color: '#1C2434',
-              formatter: () => data.total
+              formatter: () => data?.total || 0
             },
             total: {
               show: true,
@@ -35,7 +35,7 @@ const APITokenUsages = () => {
               label: 'Total',
               fontSize: '12px',
               color: '#64748B',
-              formatter: () => data.limit
+              formatter: () => data?.limit || 0
             }
           }
         }
@@ -64,7 +64,7 @@ const APITokenUsages = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.platforms || data.platforms.length === 0} 
+        isEmpty={!data || !data?.platforms || data?.platforms.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse flex flex-col pt-2">
             <div className="flex justify-between items-center mb-6">
@@ -102,7 +102,7 @@ const APITokenUsages = () => {
         {data?.platforms && (
           <div className="flex justify-center mb-6">
             <div className="w-64 relative">
-              <ReactApexChart options={options} series={data.chart_series} type="donut" />
+              <ReactApexChart options={options} series={data?.chart_series || []} type="donut" />
             </div>
           </div>
         )}

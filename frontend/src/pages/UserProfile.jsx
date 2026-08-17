@@ -8,8 +8,10 @@ import { api } from '../services/api';
 import { useApi } from '../hooks/useApi';
 import DataState from '../components/DataState';
 import { Form, Input, Textarea, useFormContext } from '../components/Form';
+import { useToast } from '../context/ToastContext';
 
 const UserProfile = () => {
+  const { showToast } = useToast();
   const { data, setData, loading, error, fetchData: fetchProfileData } = useApi('/profile/');
   
   // Modal States
@@ -21,15 +23,25 @@ const UserProfile = () => {
   const [addressForm, setAddressForm] = useState({});
 
   const handleUpdateProfile = async (values) => {
-    await api.put('/profile/', values);
-    setEditProfileOpen(false);
-    fetchProfileData();
+    try {
+      await api.put('/profile/', values);
+      setEditProfileOpen(false);
+      showToast('Profile updated successfully', 'success');
+      fetchProfileData();
+    } catch (err) {
+      showToast(err.message || 'Failed to update profile', 'error');
+    }
   };
 
   const handleUpdateAddress = async (values) => {
-    await api.put('/profile/address', values);
-    setEditAddressOpen(false);
-    fetchProfileData();
+    try {
+      await api.put('/profile/address', values);
+      setEditAddressOpen(false);
+      showToast('Address updated successfully', 'success');
+      fetchProfileData();
+    } catch (err) {
+      showToast(err.message || 'Failed to update address', 'error');
+    }
   };
 
   const handleUpdate2FA = (securityData) => {

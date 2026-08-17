@@ -77,6 +77,10 @@ const TopProducts = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'status', label: 'Status', options: ['In Stock', 'Low Stock'] }
+  ];
+
   return (
     <div className="xl:pb-6">
       <DataTable
@@ -86,7 +90,9 @@ const TopProducts = () => {
         loading={loading}
         error={error}
         onRetry={fetchProducts}
-        searchable={false}
+        searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
       />
     </div>
   );

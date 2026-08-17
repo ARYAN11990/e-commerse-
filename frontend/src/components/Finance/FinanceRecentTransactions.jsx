@@ -44,6 +44,10 @@ const FinanceRecentTransactions = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'status', label: 'Status', options: ['Completed', 'In Progress'] }
+  ];
+
   return (
     <div className="mb-4 md:mb-6 2xl:mb-7.5">
       <DataTable
@@ -54,6 +58,8 @@ const FinanceRecentTransactions = () => {
         error={error}
         onRetry={fetchTransactions}
         searchable={true}
+        showFilter={true}
+        filterOptions={filterOptions}
         selectable={true}
         onSelectionChange={() => {}}
         onView={() => {}}

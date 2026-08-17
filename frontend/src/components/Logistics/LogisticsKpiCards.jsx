@@ -38,7 +38,7 @@ const LogisticsKpiCards = () => {
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 2xl:gap-7.5 mb-4 md:mb-6 2xl:mb-7.5">
-        {kpis.map((kpi) => {
+        {kpis && (kpis || []).map((kpi) => {
           const trend = kpi.trend;
 
           return (

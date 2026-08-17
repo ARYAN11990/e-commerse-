@@ -38,7 +38,7 @@ const ActiveUsers = () => {
 
   const series = [{
     name: 'Active Users',
-    data: data.series
+    data: data?.series
   }];
 
   return (

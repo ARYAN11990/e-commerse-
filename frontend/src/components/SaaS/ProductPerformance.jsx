@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
@@ -25,7 +26,7 @@ const ProductPerformance = () => {
     dataLabels: { enabled: false },
     stroke: { show: true, width: 4, colors: ['transparent'] },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '10px' } }
@@ -58,7 +59,7 @@ const ProductPerformance = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse pt-2">
             <div className="flex bg-gray-200 dark:bg-gray-700 rounded-md p-1 mb-6 h-10"></div>

@@ -24,7 +24,7 @@ const UserRetention = () => {
     dataLabels: { enabled: false },
     stroke: { show: true, width: 2, colors: ['transparent'] },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: '#64748B', fontSize: '12px' } }
@@ -55,7 +55,7 @@ const UserRetention = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse flex flex-col pt-2">
             <div className="flex justify-between items-start mb-4">
@@ -94,7 +94,7 @@ const UserRetention = () => {
         </div>
 
         <div id="retentionChart" className="-ml-3 flex-1 flex flex-col justify-end">
-          <ReactApexChart options={options} series={data?.series ? getStackedSeries(data.series[0].data) : []} type="bar" height={280} />
+          <ReactApexChart options={options} series={data?.series ? getStackedSeries(data?.series[0].data) : []} type="bar" height={280} />
         </div>
       </DataState>
     </div>

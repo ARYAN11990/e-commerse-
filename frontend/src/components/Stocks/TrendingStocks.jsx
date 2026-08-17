@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
@@ -80,7 +81,7 @@ const TrendingStocks = () => {
           ref={scrollContainerRef}
           className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar scroll-smooth"
         >
-          {trending.map((stock, index) => {
+          {(trending || []).map((stock, index) => {
             const trend = stock.trend;
             return (
               <div key={index} className="min-w-[280px] rounded-xl border border-stroke dark:border-[#2E3A47] p-5 shrink-0">

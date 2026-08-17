@@ -40,7 +40,7 @@ const TopChannels = () => {
             </div>
           </div>
 
-          {channels.map((channel, key) => (
+          {(channels || []).map((channel, key) => (
             <div
               className={`grid grid-cols-2 ${
                 key === channels.length - 1 ? '' : 'border-b border-stroke dark:border-[#2E3A47]'

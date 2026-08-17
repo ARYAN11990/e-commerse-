@@ -49,6 +49,10 @@ const AIRecentTransactions = () => {
     }
   ];
 
+  const filterOptions = [
+    { key: 'status', label: 'Status', options: ['Active', 'Expired'] }
+  ];
+
   return (
     <DataTable
       title="Recent Transactions"
@@ -58,6 +62,8 @@ const AIRecentTransactions = () => {
       error={error}
       onRetry={fetchTransactions}
       searchable={true}
+      showFilter={true}
+      filterOptions={filterOptions}
       onView={() => {}}
     />
   );

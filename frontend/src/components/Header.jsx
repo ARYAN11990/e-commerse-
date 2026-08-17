@@ -49,9 +49,17 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
 
   const searchResults = [
     { name: 'eCommerce Dashboard', path: '/ecommerce' },
+    { name: 'Analytics Dashboard', path: '/analytics' },
+    { name: 'Marketing Dashboard', path: '/marketing' },
+    { name: 'CRM Dashboard', path: '/crm' },
+    { name: 'Stocks Dashboard', path: '/stocks' },
+    { name: 'SaaS Dashboard', path: '/saas' },
+    { name: 'Logistics Dashboard', path: '/logistics' },
+    { name: 'AI Dashboard', path: '/ai' },
     { name: 'Sales Dashboard', path: '/sales' },
     { name: 'Finance Dashboard', path: '/finance' },
-    { name: 'User Profile', path: '/profile' }
+    { name: 'User Management', path: '/users' },
+    { name: 'User Profile & Settings', path: '/profile' }
   ].filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   useEffect(() => {

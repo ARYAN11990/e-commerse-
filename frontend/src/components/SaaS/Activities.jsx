@@ -44,7 +44,7 @@ const Activities = () => {
           <div className="absolute left-[18px] top-4 bottom-4 w-[1px] bg-stroke"></div>
           
           <div className="flex flex-col gap-6">
-            {activities.map((activity, index) => (
+            {(activities || []).map((activity, index) => (
               <div key={index} className="flex gap-4 relative">
                 <div className="relative z-10 w-10 h-10 rounded-full bg-white dark:bg-[#24303F] flex items-center justify-center shrink-0">
                   <img 

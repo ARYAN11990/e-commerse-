@@ -61,7 +61,7 @@ const FeaturedCampaigns = () => {
               </tr>
             </thead>
             <tbody>
-              {campaigns.map((item, index) => (
+              {(campaigns || []).map((item, index) => (
                 <tr key={index} className="border-b border-stroke dark:border-[#2E3A47] last:border-0">
                   <td className="py-4">
                     <div className="flex items-center gap-3">

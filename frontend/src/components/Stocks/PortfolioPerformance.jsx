@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
@@ -17,7 +18,7 @@ const PortfolioPerformance = () => {
     dataLabels: { enabled: false },
     stroke: { curve: 'straight', width: 2 },
     xaxis: {
-      categories: data.categories,
+      categories: data?.categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       tickAmount: 10,
@@ -56,7 +57,7 @@ const PortfolioPerformance = () => {
         loading={loading} 
         error={error} 
         onRetry={fetchData} 
-        isEmpty={!data || !data.series || data.series.length === 0} 
+        isEmpty={!data || !data?.series || data?.series.length === 0} 
         skeleton={
           <div className="h-full w-full animate-pulse pt-2">
             <div className="h-[320px] w-full bg-gradient-to-t from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded opacity-50"></div>
