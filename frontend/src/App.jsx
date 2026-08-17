@@ -25,6 +25,16 @@ const Register = lazy(() => import('./pages/Auth/Register'));
 const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/Auth/ResetPassword'));
 
+// Ecommerce Sub-pages
+const Products = lazy(() => import('./pages/Ecommerce/Products'));
+const AddProduct = lazy(() => import('./pages/Ecommerce/AddProduct'));
+const Billing = lazy(() => import('./pages/Ecommerce/Billing'));
+const Invoices = lazy(() => import('./pages/Ecommerce/Invoices'));
+const SingleInvoice = lazy(() => import('./pages/Ecommerce/SingleInvoice'));
+const CreateInvoice = lazy(() => import('./pages/Ecommerce/CreateInvoice'));
+const Transactions = lazy(() => import('./pages/Ecommerce/Transactions'));
+const SingleTransaction = lazy(() => import('./pages/Ecommerce/SingleTransaction'));
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
@@ -73,6 +83,16 @@ function App() {
                   <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                   <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+
+                  {/* Ecommerce Sub-pages Routes */}
+                  <Route path="/ecommerce/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+                  <Route path="/ecommerce/add-product" element={<ProtectedRoute><AddProduct /></ProtectedRoute>} />
+                  <Route path="/ecommerce/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+                  <Route path="/ecommerce/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
+                  <Route path="/ecommerce/single-invoice" element={<ProtectedRoute><SingleInvoice /></ProtectedRoute>} />
+                  <Route path="/ecommerce/create-invoice" element={<ProtectedRoute><CreateInvoice /></ProtectedRoute>} />
+                  <Route path="/ecommerce/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+                  <Route path="/ecommerce/single-transaction" element={<ProtectedRoute><SingleTransaction /></ProtectedRoute>} />
                 </Routes>
               </ErrorBoundary>
             </Suspense>

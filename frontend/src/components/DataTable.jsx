@@ -5,6 +5,8 @@ const DataTable = ({
   columns,
   data,
   title,
+  subtitle,
+  headerActions,
   searchable = false,
   showFilter = true,
   searchPlaceholder = "Search...",
@@ -165,10 +167,22 @@ const DataTable = ({
   return (
     <div className={`rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] shadow-sm ${headerClassName}`}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-5 pt-6 pb-4 sm:px-7.5">
-        {title && <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">{title}</h4>}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-5 pt-6 pb-4 sm:px-7.5 border-b border-stroke dark:border-[#2E3A47]">
+        <div>
+          {title && <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">{title}</h4>}
+          {subtitle && <p className="text-sm text-[#64748B] dark:text-[#8A99AF] mt-1">{subtitle}</p>}
+        </div>
         
-        {(searchable || showFilter) && (
+        {headerActions && (
+          <div className="flex items-center gap-3">
+            {headerActions}
+          </div>
+        )}
+      </div>
+
+      {/* Search and Filter */}
+      {(searchable || showFilter) && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-5 py-4 sm:px-7.5">
           <div className="flex items-center gap-3 w-full sm:w-auto">
             {searchable && (
               <div className="relative w-full sm:w-64">
@@ -238,8 +252,8 @@ const DataTable = ({
               </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Table */}
       <div className="max-w-full overflow-x-auto pb-4">

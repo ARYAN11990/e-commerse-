@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [dashboardOpen, setDashboardOpen] = useState(true);
+  const [ecommerceOpen, setEcommerceOpen] = useState(true);
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -218,15 +219,52 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </li>
 
-              {/* Other Items */}
+              {/* E-commerce Dropdown (Expanded) */}
               <li>
-                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <div 
+                  className={`group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium cursor-pointer ${
+                    ecommerceOpen 
+                      ? 'bg-[#F1F5F9] dark:bg-[#1A222C] text-[#3C50E0]' 
+                      : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                  }`}
+                  onClick={() => setEcommerceOpen(!ecommerceOpen)}
+                >
                   <div className="flex items-center gap-2.5">
                     <ShoppingCart className="w-5 h-5" />
                     E-commerce
                   </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </a>
+                  {ecommerceOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                </div>
+                {/* Dropdown Items */}
+                <div className={`mt-2 pl-9 pr-4 ${ecommerceOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    {[
+                      { path: '/ecommerce/products', name: 'Products' },
+                      { path: '/ecommerce/add-product', name: 'Add Product' },
+                      { path: '/ecommerce/billing', name: 'Billing' },
+                      { path: '/ecommerce/invoices', name: 'Invoices' },
+                      { path: '/ecommerce/single-invoice', name: 'Single Invoice' },
+                      { path: '/ecommerce/create-invoice', name: 'Create Invoice' },
+                      { path: '/ecommerce/transactions', name: 'Transactions' },
+                      { path: '/ecommerce/single-transaction', name: 'Single Transaction' },
+                    ].map((item) => (
+                      <li key={item.path}>
+                        <NavLink
+                          to={item.path}
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                            }`
+                          }
+                        >
+                          {item.name}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </li>
               <li>
                 <NavLink to="/users" className={({ isActive }) =>

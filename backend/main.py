@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
-from routers import dashboard, analytics, marketing, crm, stocks, saas, logistics, ai, sales, finance, profile, auth, notifications, users
+from routers import dashboard, analytics, marketing, crm, stocks, saas, logistics, ai, sales, finance, profile, auth, notifications, users, ecommerce
 
 app = FastAPI(title="TailAdmin Dashboard API")
 
@@ -69,6 +69,7 @@ app.include_router(profile.router, prefix="/api/v1")
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(ecommerce.router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():
