@@ -1,15 +1,9 @@
-import { useState, useEffect } from 'react';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const MyWatchlist = () => {
-  const [watchlist, setWatchlist] = useState([]);
-
-  useEffect(() => {
-    api.get('/stocks/watchlist')
-      .then((data) => setWatchlist(data))
-      .catch((err) => console.error(err));
-  }, []);
+  const { data: watchlist = [], loading, error, fetchData } = useApi('/stocks/watchlist');
 
   const getLogo = (logoName) => {
     switch (logoName) {
@@ -31,28 +25,51 @@ const MyWatchlist = () => {
         </button>
       </div>
 
-      <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar pb-4">
-        {watchlist.map((item, index) => {
-          const trend = item.trend;
-          return (
-            <div key={index} className="flex items-center justify-between border-b border-stroke dark:border-[#2E3A47] py-3 last:border-b-0">
-              <div className="flex items-center gap-3">
-                {getLogo(item.logo)}
-                <div>
-                  <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{item.symbol}</h5>
-                  <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">{item.name}</p>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!watchlist || watchlist.length === 0} 
+        skeleton={
+          <div className="flex flex-col flex-1 pb-4 animate-pulse pt-2 gap-4">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="flex items-center justify-between border-b border-stroke dark:border-[#2E3A47] py-3 last:border-b-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                  <div><div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div><div className="h-3 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+                </div>
+                <div className="text-right flex flex-col items-end">
+                  <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div>
+                  <div className="h-3 w-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
               </div>
-              <div className="text-right">
-                <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{item.price}</h5>
-                <span className={`text-xs font-medium flex items-center justify-end gap-1 ${trend === 'up' ? 'text-[#10B981]' : trend === 'down' ? 'text-[#EF4444]' : 'text-[#64748B] dark:text-[#8A99AF]'}`}>
-                  {trend === 'up' ? '↑' : trend === 'down' ? '↓' : ''} {item.percentage}
-                </span>
+            ))}
+          </div>
+        }
+      >
+        <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar pb-4">
+          {watchlist.map((item, index) => {
+            const trend = item.trend;
+            return (
+              <div key={index} className="flex items-center justify-between border-b border-stroke dark:border-[#2E3A47] py-3 last:border-b-0">
+                <div className="flex items-center gap-3">
+                  {getLogo(item.logo)}
+                  <div>
+                    <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{item.symbol}</h5>
+                    <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">{item.name}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{item.price}</h5>
+                  <span className={`text-xs font-medium flex items-center justify-end gap-1 ${trend === 'up' ? 'text-[#10B981]' : trend === 'down' ? 'text-[#EF4444]' : 'text-[#64748B] dark:text-[#8A99AF]'}`}>
+                    {trend === 'up' ? '↑' : trend === 'down' ? '↓' : ''} {item.percentage}
+                  </span>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </DataState>
     </div>
   );
 };

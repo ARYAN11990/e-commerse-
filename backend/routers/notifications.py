@@ -1,28 +1,29 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, Header
+from typing import Optional
+from providers.mock_provider import MockProvider
+from repositories.notification_repository import NotificationRepository
+from services.notification_service import NotificationService
+from utils.mock_data import session_id_var
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
-mock_notifications = [
-    {"id": 1, "title": "Edit your information in a swipe", "description": "Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.", "date": "12 May, 2025", "read": False},
-    {"id": 2, "title": "It is a long established fact", "description": "That a reader will be distracted by the readable.", "date": "24 Feb, 2025", "read": False},
-    {"id": 3, "title": "There are many variations", "description": "Of passages of Lorem Ipsum available, but the majority have suffered.", "date": "04 Jan, 2025", "read": True},
-    {"id": 4, "title": "There are many variations", "description": "Of passages of Lorem Ipsum available, but the majority have suffered.", "date": "01 Dec, 2024", "read": True},
-]
+def get_notification_service(x_session_id: Optional[str] = Header(None)) -> NotificationService:
+    if x_session_id:
+        session_id_var.set(x_session_id)
+    provider = MockProvider()
+    repository = NotificationRepository(provider)
+    return NotificationService(repository)
 
 @router.get("/")
-def get_notifications():
-    return mock_notifications
+def get_notifications(service: NotificationService = Depends(get_notification_service)):
+    return service.get_notifications()
 
 @router.put("/read/{notif_id}")
-def mark_read(notif_id: int):
-    for n in mock_notifications:
-        if n["id"] == notif_id:
-            n["read"] = True
+def mark_read(notif_id: int, service: NotificationService = Depends(get_notification_service)):
+    service.mark_notification_read(notif_id)
     return {"status": "success"}
 
 @router.put("/read-all")
-def mark_all_read():
-    for n in mock_notifications:
-        n["read"] = True
+def mark_all_read(service: NotificationService = Depends(get_notification_service)):
+    service.mark_all_notifications_read()
     return {"status": "success"}

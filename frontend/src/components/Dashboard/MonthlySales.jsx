@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const MonthlySales = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/dashboard/monthly-sales')
-      .then(data => setData(data));
-  }, []);
-
-  if (!data) return <div>Loading...</div>;
+  const { data, loading, error, fetchData } = useApi('/dashboard/monthly-sales');
 
   const options = {
     colors: ['#3C50E0'],
@@ -70,11 +64,27 @@ const MonthlySales = () => {
         </button>
       </div>
 
-      <div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.data || data.data.length === 0} 
+        skeleton={
+          <div className="h-[220px] w-full animate-pulse flex items-end gap-2 px-4 pb-4">
+            <div className="h-1/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-2/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/2 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-full w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-3/4 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/4 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-2/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+          </div>
+        }
+      >
         <div id="chartTwo" className="-ml-5">
           <ReactApexChart options={options} series={series} type="bar" height={220} />
         </div>
-      </div>
+      </DataState>
     </div>
   );
 };

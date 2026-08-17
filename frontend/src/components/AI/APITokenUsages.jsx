@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const APITokenUsages = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/ai/token-usages')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="h-[400px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] animate-pulse h-full" />;
+  const { data, loading, error, fetchData } = useApi('/ai/token-usages');
 
   const options = {
     chart: {
@@ -68,42 +60,77 @@ const APITokenUsages = () => {
 
   return (
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default h-full flex flex-col">
-      <div className="flex justify-between items-center mb-6">
-        <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">API Token Usages</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="flex justify-center mb-6">
-        <div className="w-64 relative">
-          <ReactApexChart options={options} series={data.chart_series} type="donut" />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 flex-1">
-        {data.platforms.map((platform, index) => (
-          <div key={index} className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {getPlatformIcon(platform.icon)}
-              <div>
-                <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{platform.name}</h5>
-                <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">{platform.keys}</p>
-              </div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.platforms || data.platforms.length === 0} 
+        skeleton={
+          <div className="h-full w-full animate-pulse flex flex-col pt-2">
+            <div className="flex justify-between items-center mb-6">
+              <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
             </div>
-            <div className="text-right">
-              <span className="text-sm font-bold text-[#1C2434] dark:text-white flex items-center justify-end gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3C50E0]"></span> {platform.used}
-              </span>
-              <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">Token used</p>
+            <div className="flex justify-center mb-6">
+              <div className="w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+            <div className="flex flex-col gap-4 flex-1">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                    <div><div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div><div className="h-3 w-12 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <div className="h-4 w-10 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div>
+                    <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 mx-auto h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          </div>
+        }
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">API Token Usages</h4>
+          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        </div>
+
+        {data?.platforms && (
+          <div className="flex justify-center mb-6">
+            <div className="w-64 relative">
+              <ReactApexChart options={options} series={data.chart_series} type="donut" />
             </div>
           </div>
-        ))}
-      </div>
+        )}
 
-      <button className="mt-6 w-full text-center text-sm font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#3C50E0] transition-colors">
-        View All Usage Details
-      </button>
+        <div className="flex flex-col gap-4 flex-1">
+          {data?.platforms?.map((platform, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {getPlatformIcon(platform.icon)}
+                <div>
+                  <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{platform.name}</h5>
+                  <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">{platform.keys}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-sm font-bold text-[#1C2434] dark:text-white flex items-center justify-end gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#3C50E0]"></span> {platform.used}
+                </span>
+                <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">Token used</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button className="mt-6 w-full text-center text-sm font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#3C50E0] transition-colors">
+          View All Usage Details
+        </button>
+      </DataState>
     </div>
   );
 };

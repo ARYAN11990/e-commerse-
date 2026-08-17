@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MyProfile from '../components/UserProfile/MyProfile';
 import Address from '../components/UserProfile/Address';
 import Security from '../components/UserProfile/Security';
 import DangerZone from '../components/UserProfile/DangerZone';
 import { ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
+import { useApi } from '../hooks/useApi';
+import DataState from '../components/DataState';
+import { Form, Input, Textarea, useFormContext } from '../components/Form';
 
 const UserProfile = () => {
-  const [data, setData] = useState(null);
+  const { data, setData, loading, error, fetchData: fetchProfileData } = useApi('/profile/');
   
   // Modal States
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -17,32 +20,16 @@ const UserProfile = () => {
   const [profileForm, setProfileForm] = useState({});
   const [addressForm, setAddressForm] = useState({});
 
-  useEffect(() => {
+  const handleUpdateProfile = async (values) => {
+    await api.put('/profile/', values);
+    setEditProfileOpen(false);
     fetchProfileData();
-  }, []);
-
-  const fetchProfileData = () => {
-    api.get('/profile/')
-      .then(resData => setData(resData))
-      .catch(err => console.error(err));
   };
 
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
-    api.put('/profile/', profileForm)
-      .then(() => {
-        setEditProfileOpen(false);
-        fetchProfileData();
-      });
-  };
-
-  const handleUpdateAddress = (e) => {
-    e.preventDefault();
-    api.put('/profile/address', addressForm)
-      .then(() => {
-        setEditAddressOpen(false);
-        fetchProfileData();
-      });
+  const handleUpdateAddress = async (values) => {
+    await api.put('/profile/address', values);
+    setEditAddressOpen(false);
+    fetchProfileData();
   };
 
   const handleUpdate2FA = (securityData) => {
@@ -59,10 +46,16 @@ const UserProfile = () => {
     setEditAddressOpen(true);
   };
 
-  if (!data) return <div className="animate-pulse h-[800px]" />;
-
   return (
-    <>
+    <DataState
+      loading={loading}
+      error={error}
+      onRetry={fetchProfileData}
+      isEmpty={!data}
+      skeleton={<div className="animate-pulse h-[800px]" />}
+    >
+      {data && (
+        <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <h2 className="text-2xl font-bold text-[#1C2434] dark:text-white">User Profile</h2>
         <div className="flex items-center gap-2 mt-2 sm:mt-0 text-sm font-medium">
@@ -87,41 +80,31 @@ const UserProfile = () => {
             <div className="p-6 border-b border-stroke dark:border-[#2E3A47]">
               <h3 className="text-xl font-bold text-[#1C2434] dark:text-white">Edit Profile</h3>
             </div>
-            <form onSubmit={handleUpdateProfile} className="flex-1 overflow-y-auto p-6 grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">First Name</label>
-                <input type="text" value={profileForm.first_name || ''} onChange={e => setProfileForm({...profileForm, first_name: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Last Name</label>
-                <input type="text" value={profileForm.last_name || ''} onChange={e => setProfileForm({...profileForm, last_name: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Email</label>
-                <input type="email" value={profileForm.email || ''} onChange={e => setProfileForm({...profileForm, email: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Phone</label>
-                <input type="text" value={profileForm.phone || ''} onChange={e => setProfileForm({...profileForm, phone: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Job Title</label>
-                <input type="text" value={profileForm.job_title || ''} onChange={e => setProfileForm({...profileForm, job_title: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Location</label>
-                <input type="text" value={profileForm.location || ''} onChange={e => setProfileForm({...profileForm, location: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div className="col-span-2">
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Bio</label>
-                <textarea value={profileForm.bio || ''} onChange={e => setProfileForm({...profileForm, bio: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" rows="3" required></textarea>
+            <Form 
+              initialValues={profileForm} 
+              validationRules={{
+                first_name: { required: 'First name is required' },
+                last_name: { required: 'Last name is required' },
+                email: { required: 'Email is required', email: 'Invalid email' },
+              }}
+              onSubmit={handleUpdateProfile} 
+              className="flex-1 overflow-y-auto p-6 flex flex-col"
+            >
+              <div className="grid grid-cols-2 gap-4 flex-1">
+                <Input name="first_name" label="First Name" containerClassName="" />
+                <Input name="last_name" label="Last Name" containerClassName="" />
+                <Input name="email" type="email" label="Email" containerClassName="" />
+                <Input name="phone" label="Phone" containerClassName="" />
+                <Input name="job_title" label="Job Title" containerClassName="" />
+                <Input name="location" label="Location" containerClassName="" />
+                <Textarea name="bio" label="Bio" containerClassName="col-span-2" rows={3} />
               </div>
               
-              <div className="col-span-2 flex justify-end gap-4 mt-4">
+              <div className="flex justify-end gap-4 mt-6">
                 <button type="button" onClick={() => setEditProfileOpen(false)} className="rounded border border-stroke dark:border-[#2E3A47] px-6 py-2 font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]">Cancel</button>
-                <button type="submit" className="rounded bg-[#3C50E0] px-6 py-2 font-medium text-white hover:bg-opacity-90">Save Changes</button>
+                <SubmitButton text="Save Changes" loadingText="Saving..." />
               </div>
-            </form>
+            </Form>
           </div>
         </>
       )}
@@ -134,33 +117,46 @@ const UserProfile = () => {
             <div className="p-6 border-b border-stroke dark:border-[#2E3A47]">
               <h3 className="text-xl font-bold text-[#1C2434] dark:text-white">Edit Address</h3>
             </div>
-            <form onSubmit={handleUpdateAddress} className="flex-1 overflow-y-auto p-6 grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Country</label>
-                <input type="text" value={addressForm.country || ''} onChange={e => setAddressForm({...addressForm, country: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">City/State</label>
-                <input type="text" value={addressForm.city_state || ''} onChange={e => setAddressForm({...addressForm, city_state: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">Postal Code</label>
-                <input type="text" value={addressForm.postal_code || ''} onChange={e => setAddressForm({...addressForm, postal_code: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#1C2434] dark:text-white">TAX ID</label>
-                <input type="text" value={addressForm.tax_id || ''} onChange={e => setAddressForm({...addressForm, tax_id: e.target.value})} className="w-full rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 outline-none focus:border-[#3C50E0]" required />
+            <Form 
+              initialValues={addressForm} 
+              validationRules={{
+                country: { required: 'Country is required' },
+                city_state: { required: 'City/State is required' },
+              }}
+              onSubmit={handleUpdateAddress} 
+              className="flex-1 overflow-y-auto p-6 flex flex-col"
+            >
+              <div className="grid grid-cols-2 gap-4 flex-1">
+                <Input name="country" label="Country" containerClassName="" />
+                <Input name="city_state" label="City/State" containerClassName="" />
+                <Input name="postal_code" label="Postal Code" containerClassName="" />
+                <Input name="tax_id" label="TAX ID" containerClassName="" />
               </div>
               
-              <div className="col-span-2 flex justify-end gap-4 mt-4">
+              <div className="flex justify-end gap-4 mt-6">
                 <button type="button" onClick={() => setEditAddressOpen(false)} className="rounded border border-stroke dark:border-[#2E3A47] px-6 py-2 font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]">Cancel</button>
-                <button type="submit" className="rounded bg-[#3C50E0] px-6 py-2 font-medium text-white hover:bg-opacity-90">Save Changes</button>
+                <SubmitButton text="Save Changes" loadingText="Saving..." />
               </div>
-            </form>
+            </Form>
           </div>
         </>
       )}
-    </>
+        </>
+      )}
+    </DataState>
+  );
+};
+
+const SubmitButton = ({ text, loadingText }) => {
+  const { isSubmitting } = useFormContext();
+  return (
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className="rounded bg-[#3C50E0] px-6 py-2 font-medium text-white hover:bg-opacity-90 disabled:opacity-50"
+    >
+      {isSubmitting ? loadingText : text}
+    </button>
   );
 };
 

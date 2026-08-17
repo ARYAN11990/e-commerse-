@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const SparklineChart = ({ color, data }) => {
   const options = {
@@ -20,16 +21,8 @@ const SparklineChart = ({ color, data }) => {
 };
 
 const TrafficStats = () => {
-  const [data, setData] = useState(null);
   const [period, setPeriod] = useState('Today');
-
-  useEffect(() => {
-    api.get('/marketing/traffic-stats')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="animate-pulse bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] h-[400px]" />;
+  const { data, loading, error, fetchData } = useApi('/marketing/traffic-stats');
 
   const statsList = [
     { 
@@ -75,30 +68,54 @@ const TrafficStats = () => {
         ))}
       </div>
 
-      <div className="flex flex-col gap-6 flex-1">
-        {statsList.map((stat, idx) => {
-          const itemData = data[stat.key];
-          const trend = itemData.trend;
-          return (
-            <div key={idx} className={`${idx !== statsList.length - 1 ? 'border-b border-stroke dark:border-[#2E3A47] pb-6' : ''}`}>
-              <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">{stat.label}</span>
-              <div className="flex justify-between items-end">
-                <div>
-                  <h4 className="text-title-md font-bold text-[#1C2434] dark:text-white text-[24px] leading-none mb-1">
-                    {itemData.value}
-                  </h4>
-                  <span className={`text-xs font-medium ${trend === 'up' ? 'text-[#10B981]' : trend === 'down' ? 'text-[#EF4444]' : 'text-[#64748B] dark:text-[#8A99AF]'}`}>
-                    {trend === 'up' ? '+' : trend === 'down' ? '-' : ''}{itemData.rate} <span className="text-gray-400">then last Week</span>
-                  </span>
-                </div>
-                <div>
-                  <SparklineChart color={stat.color} data={stat.sparkData} />
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data} 
+        skeleton={
+          <div className="flex flex-col animate-pulse pt-2 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="flex flex-col pb-6 border-b border-stroke dark:border-[#2E3A47] last:border-0">
+                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <div className="h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                    <div className="h-3 w-40 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
+                  <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-6 flex-1">
+          {statsList.map((stat, idx) => {
+            const itemData = data?.[stat.key];
+            if (!itemData) return null;
+            const trend = itemData.trend;
+            return (
+              <div key={idx} className={`${idx !== statsList.length - 1 ? 'border-b border-stroke dark:border-[#2E3A47] pb-6' : ''}`}>
+                <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">{stat.label}</span>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <h4 className="text-title-md font-bold text-[#1C2434] dark:text-white text-[24px] leading-none mb-1">
+                      {itemData.value}
+                    </h4>
+                    <span className={`text-xs font-medium ${trend === 'up' ? 'text-[#10B981]' : trend === 'down' ? 'text-[#EF4444]' : 'text-[#64748B] dark:text-[#8A99AF]'}`}>
+                      {trend === 'up' ? '+' : trend === 'down' ? '-' : ''}{itemData.rate} <span className="text-gray-400">then last Week</span>
+                    </span>
+                  </div>
+                  <div>
+                    <SparklineChart color={stat.color} data={stat.sparkData} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </DataState>
     </div>
   );
 };

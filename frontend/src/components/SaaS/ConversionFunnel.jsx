@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const ConversionFunnel = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/saas/conversion-funnel')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="animate-pulse h-[400px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47]" />;
+  const { data, loading, error, fetchData } = useApi('/saas/conversion-funnel');
 
   const options = {
     chart: {
@@ -64,25 +56,41 @@ const ConversionFunnel = () => {
 
   return (
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default mb-4 md:mb-6 2xl:mb-7.5">
-      <div className="flex justify-between items-start mb-6">
-        <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Conversion Funnel</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">
-        {legends.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <span className={`w-2.5 h-2.5 rounded-full ${item.color}`}></span>
-            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{item.label}</span>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-full w-full animate-pulse pt-2">
+            <div className="h-[320px] w-full flex items-end justify-between px-4 pb-4">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="w-[10%] bg-gray-200 dark:bg-gray-700 rounded-t" style={{ height: `${Math.random() * 60 + 40}%` }}></div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+        }
+      >
+        <div className="flex justify-between items-start mb-6">
+          <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Conversion Funnel</h4>
+          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        </div>
 
-      <div id="conversionChart" className="-ml-5">
-        <ReactApexChart options={options} series={data.series} type="bar" height={320} />
-      </div>
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">
+          {legends.map((item, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${item.color}`}></span>
+              <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <div id="conversionChart" className="-ml-5">
+          <ReactApexChart options={options} series={data?.series || []} type="bar" height={320} />
+        </div>
+      </DataState>
     </div>
   );
 };

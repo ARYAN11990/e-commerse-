@@ -1,14 +1,8 @@
-import { useState, useEffect } from 'react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataTable from '../DataTable';
 
 const TopProducts = () => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    api.get('/sales/top-products')
-      .then((data) => setProducts(data))
-      .catch((err) => console.error(err));
-  }, []);
+  const { data: products = [], loading, error, fetchData: fetchProducts } = useApi('/sales/top-products');
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -37,68 +31,63 @@ const TopProducts = () => {
     );
   };
 
-  return (
-    <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] px-5 pt-6 pb-2.5 shadow-default sm:px-7.5 xl:pb-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Top Products</h4>
-        
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 rounded-md border border-stroke dark:border-[#2E3A47] px-4 py-2 text-sm font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray-50 dark:hover:bg-[#313D4A] hover:text-[#1C2434] dark:hover:text-white dark:text-white whitespace-nowrap">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0.583374 2.33333C0.583374 1.689 1.10571 1.16667 1.75004 1.16667H12.25C12.8944 1.16667 13.4167 1.689 13.4167 2.33333C13.4167 2.59392 13.2952 2.8398 13.0886 2.99478L8.75004 6.24838V11.0833C8.75004 11.5305 8.44147 11.9168 8.00662 12.0155L6.25662 12.4131C5.62688 12.5562 5.03337 12.0768 5.03337 11.4325V6.24838L0.694828 2.99478C0.48819 2.8398 0.583374 2.59392 0.583374 2.33333Z" fill="currentColor"/>
-            </svg>
-            Filter
-          </button>
-          <button className="rounded-md border border-stroke dark:border-[#2E3A47] px-4 py-2 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] whitespace-nowrap">
-            See All
-          </button>
+  const columns = [
+    {
+      header: 'Product Name',
+      accessor: 'name',
+      className: 'min-w-[220px]',
+      renderCell: (row) => (
+        <div className="flex items-center gap-4">
+          {getProductImage(row.image)}
+          <div>
+            <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{row.name}</h5>
+            <p className="text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">{row.variants}</p>
+          </div>
         </div>
-      </div>
+      )
+    },
+    {
+      header: 'Product ID',
+      accessor: 'product_id',
+      renderCell: (row) => <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{row.product_id}</p>
+    },
+    {
+      header: 'Sales',
+      accessor: 'sales',
+      renderCell: (row) => <p className="text-sm font-medium text-[#1C2434] dark:text-white">{row.sales}</p>
+    },
+    {
+      header: 'Earnings',
+      accessor: 'earnings',
+      renderCell: (row) => <p className="text-sm font-medium text-[#1C2434] dark:text-white">{row.earnings}</p>
+    },
+    {
+      header: 'Stocks',
+      accessor: 'stocks',
+      renderCell: (row) => <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{row.stocks}</p>
+    },
+    {
+      header: 'Status',
+      accessor: 'status',
+      renderCell: (row) => (
+        <span className={`inline-flex rounded-md px-2 py-0.5 text-xs font-bold ${getStatusColor(row.status)}`}>
+          {row.status}
+        </span>
+      )
+    }
+  ];
 
-      <div className="max-w-full overflow-x-auto">
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="border-b border-stroke dark:border-[#2E3A47] text-left">
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF] min-w-[220px]">Product Name</th>
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF]">Product ID</th>
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF]">Sales</th>
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF]">Earnings</th>
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF]">Stocks</th>
-              <th className="py-4 text-xs font-semibold text-[#64748B] dark:text-[#8A99AF]">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((item, index) => (
-              <tr key={index} className="border-b border-stroke dark:border-[#2E3A47] last:border-0 hover:bg-gray-50 dark:hover:bg-[#313D4A]/50">
-                <td className="py-4 flex items-center gap-4">
-                  {getProductImage(item.image)}
-                  <div>
-                    <h5 className="text-sm font-bold text-[#1C2434] dark:text-white">{item.name}</h5>
-                    <p className="text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">{item.variants}</p>
-                  </div>
-                </td>
-                <td className="py-4">
-                  <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{item.product_id}</p>
-                </td>
-                <td className="py-4">
-                  <p className="text-sm font-medium text-[#1C2434] dark:text-white">{item.sales}</p>
-                </td>
-                <td className="py-4">
-                  <p className="text-sm font-medium text-[#1C2434] dark:text-white">{item.earnings}</p>
-                </td>
-                <td className="py-4">
-                  <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{item.stocks}</p>
-                </td>
-                <td className="py-4">
-                  <span className={`inline-flex rounded-md px-2 py-0.5 text-xs font-bold ${getStatusColor(item.status)}`}>
-                    {item.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  return (
+    <div className="xl:pb-6">
+      <DataTable
+        title="Top Products"
+        columns={columns}
+        data={products}
+        loading={loading}
+        error={error}
+        onRetry={fetchProducts}
+        searchable={false}
+      />
     </div>
   );
 };

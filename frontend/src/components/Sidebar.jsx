@@ -1,15 +1,33 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Calendar, User, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Calendar, User, Users, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown } from 'lucide-react';
+import { useEffect } from 'react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [sidebarOpen, setSidebarOpen]);
+
   return (
-    <aside
-      className={`absolute left-0 top-0 z-50 flex h-screen flex-col overflow-y-hidden bg-white dark:bg-[#24303F] border-r border-stroke dark:border-[#2E3A47] duration-300 ease-linear lg:static lg:translate-x-0 ${
-        sidebarOpen 
-          ? 'translate-x-0 w-72 lg:w-0 lg:border-none lg:opacity-0 lg:overflow-hidden' 
-          : '-translate-x-full w-72 lg:w-72'
-      }`}
-    >
+    <>
+      {/* Mobile Overlay */}
+      <div 
+        className={`fixed inset-0 z-20 bg-black/50 transition-opacity lg:hidden ${sidebarOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+      
+      <aside
+        className={`absolute left-0 top-0 z-30 flex h-screen flex-col overflow-y-hidden bg-white dark:bg-[#24303F] border-r border-stroke dark:border-[#2E3A47] duration-300 ease-linear lg:static lg:translate-x-0 ${
+          sidebarOpen 
+            ? 'translate-x-0 w-72 lg:w-0 lg:border-none lg:opacity-0 lg:overflow-hidden' 
+            : '-translate-x-full w-72 lg:w-72'
+        }`}
+      >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5 mt-5">
         <NavLink to="/" className="flex items-center gap-3">
@@ -202,6 +220,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </a>
               </li>
               <li>
+                <NavLink to="/users" className={({ isActive }) =>
+                  `group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium ${
+                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                  }`
+                }>
+                  <Users className="w-5 h-5" />
+                  Users
+                </NavLink>
+              </li>
+              <li>
                 <a href="#" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
                   <Calendar className="w-5 h-5" />
                   Calendar
@@ -254,6 +282,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </nav>
       </div>
     </aside>
+    </>
   );
 };
 

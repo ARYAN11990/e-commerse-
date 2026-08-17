@@ -1,17 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Users, Package, ArrowUp, ArrowDown , ArrowRight } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const KpiCards = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/dashboard/kpis')
-      .then(data => setData(data))
-      .catch(err => console.error("Failed to fetch KPIs", err));
-  }, []);
-
-  if (!data) return <div className="text-center py-4">Loading KPIs...</div>;
+  const { data, loading, error, fetchData } = useApi('/dashboard/kpis');
 
   const kpis = [
     {
@@ -27,7 +20,18 @@ const KpiCards = () => {
   ];
 
   return (
-    <>
+    <DataState loading={loading} error={error} onRetry={fetchData} isEmpty={!data} skeleton={
+      <>
+        <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-sm flex flex-col justify-between h-[160px] animate-pulse">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+          <div className="mt-4"><div className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div><div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+        </div>
+        <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-sm flex flex-col justify-between h-[160px] animate-pulse">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+          <div className="mt-4"><div className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div><div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+        </div>
+      </>
+    }>
       {kpis.map((kpi, idx) => {
         const itemData = data[kpi.key];
         const trend = itemData.trend;
@@ -56,7 +60,7 @@ const KpiCards = () => {
           </div>
         );
       })}
-    </>
+    </DataState>
   );
 };
 

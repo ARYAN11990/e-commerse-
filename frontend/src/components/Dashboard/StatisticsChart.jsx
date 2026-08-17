@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Calendar } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const StatisticsChart = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/dashboard/statistics')
-      .then(data => setData(data));
-  }, []);
-
-  if (!data) return <div>Loading...</div>;
+  const { data, loading, error, fetchData } = useApi('/dashboard/statistics');
 
   const options = {
     legend: { show: false },
@@ -80,11 +74,21 @@ const StatisticsChart = () => {
         </div>
       </div>
 
-      <div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-[250px] w-full animate-pulse flex items-end">
+            <div className="h-full w-full bg-gradient-to-t from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-t opacity-50"></div>
+          </div>
+        }
+      >
         <div id="chartOne" className="-ml-5">
-          <ReactApexChart options={options} series={data.series} type="area" height={250} />
+          <ReactApexChart options={options} series={data?.series || []} type="area" height={250} />
         </div>
-      </div>
+      </DataState>
     </div>
   );
 };

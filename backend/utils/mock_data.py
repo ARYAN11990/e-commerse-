@@ -1,22 +1,23 @@
 import random
-import time
 from typing import List, Dict, Any, Tuple
+from contextvars import ContextVar
 
-_GLOBAL_STATE = {}
-_LAST_GEN_TIME = 0
+# A ContextVar to store the current request's session ID
+session_id_var: ContextVar[str] = ContextVar("session_id", default="default-session")
+
+# Outer dict keyed by session_id, inner dict keyed by dashboard_name
+_GLOBAL_STATE: Dict[str, Dict[str, dict]] = {}
 
 def get_dashboard_state(dashboard_name: str, generator_func) -> dict:
-    global _GLOBAL_STATE, _LAST_GEN_TIME
-    current_time = time.time()
-    # Regenerate if older than 2 seconds (groups concurrent page-load requests together)
-    if current_time - _LAST_GEN_TIME > 2:
-        _GLOBAL_STATE = {}
-        _LAST_GEN_TIME = current_time
+    session_id = session_id_var.get()
+    
+    if session_id not in _GLOBAL_STATE:
+        _GLOBAL_STATE[session_id] = {}
         
-    if dashboard_name not in _GLOBAL_STATE:
-        _GLOBAL_STATE[dashboard_name] = generator_func()
+    if dashboard_name not in _GLOBAL_STATE[session_id]:
+        _GLOBAL_STATE[session_id][dashboard_name] = generator_func()
         
-    return _GLOBAL_STATE[dashboard_name]
+    return _GLOBAL_STATE[session_id][dashboard_name]
 
 def random_percentage(min_val=1, max_val=99, decimals=2) -> float:
     return round(random.uniform(min_val, max_val), decimals)

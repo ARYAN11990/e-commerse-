@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Bell, Moon, Sun, Menu, ChevronDown, User, Settings, LogOut, Check } from 'lucide-react';
+import { Search, Bell, Moon, Sun, Menu, ChevronDown, User as UserIcon, Settings, LogOut, Check } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
-
+import { useAuth } from '../context/AuthContext';
+import { useApi } from '../hooks/useApi';
+import DataState from './DataState';
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   
   // Theme State
   const [theme, setTheme] = useState(
@@ -24,6 +27,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
   // Search State
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSearchIndex, setSelectedSearchIndex] = useState(0);
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -35,6 +39,8 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
       }
       if (e.key === 'Escape') {
         setSearchOpen(false);
+        setNotifOpen(false);
+        setProfileOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -48,32 +54,46 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
     { name: 'User Profile', path: '/profile' }
   ].filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
-  // Notifications State
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-
   useEffect(() => {
-    api.get('/notifications/')
-      .then(data => setNotifications(data))
-      .catch(err => console.error(err));
-  }, []);
+    setSelectedSearchIndex(0);
+  }, [searchQuery, searchOpen]);
 
-  const markAllRead = () => {
-    api.put('/notifications/read-all', {})
-      .then(() => setNotifications(notifications.map(n => ({ ...n, read: true }))));
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedSearchIndex(prev => (prev < searchResults.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedSearchIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (searchResults[selectedSearchIndex]) {
+        navigate(searchResults[selectedSearchIndex].path);
+        setSearchOpen(false);
+      }
+    }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  // Notifications State
+  const [notifOpen, setNotifOpen] = useState(false);
+  const { data: notifications, loading: notifLoading, error: notifError, fetchData: fetchNotifs } = useApi('/notifications');
+
+  const markAllRead = () => {
+    api.put('/notifications/read-all', {}).then(() => fetchNotifs());
+  };
+
+  const markRead = (id) => {
+    api.put(`/notifications/read/${id}`, {}).then(() => fetchNotifs());
+  };
+
+  const unreadCount = notifications ? notifications.filter(n => !n.read).length : 0;
 
   // Profile Dropdown State
   const [profileOpen, setProfileOpen] = useState(false);
 
   const handleLogout = () => {
-    api.post('/auth/logout', {})
-      .then(() => {
-        // Redirect to login (mocked by redirecting to root or a login page if existed)
-        navigate('/');
-      });
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -82,6 +102,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
         
         <div className="flex items-center gap-4">
           <button
+            aria-label="Toggle Sidebar"
             onClick={(e) => {
               e.stopPropagation();
               setSidebarOpen(!sidebarOpen);
@@ -96,7 +117,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
               className="relative flex items-center cursor-text"
               onClick={() => { setSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 100); }}
             >
-              <button className="absolute left-0 top-1/2 -translate-y-1/2">
+              <button aria-label="Search" className="absolute left-0 top-1/2 -translate-y-1/2">
                 <Search className="w-5 h-5 text-[#64748B] dark:text-[#8A99AF] hover:text-[#3C50E0]" />
               </button>
               <input
@@ -124,15 +145,20 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                        placeholder="Search pages..."
                        value={searchQuery}
                        onChange={e => setSearchQuery(e.target.value)}
+                       onKeyDown={handleSearchKeyDown}
                      />
                    </div>
                    <ul className="max-h-64 overflow-y-auto p-2">
-                     {searchResults.map(result => (
+                     {searchResults.map((result, index) => (
                        <li key={result.path}>
                          <NavLink 
                            to={result.path} 
                            onClick={() => setSearchOpen(false)}
-                           className="block w-full px-4 py-2 text-sm text-[#64748B] dark:text-[#8A99AF] hover:bg-gray-50 dark:hover:bg-[#313D4A] hover:text-[#3C50E0] rounded-md"
+                           className={`block w-full px-4 py-2 text-sm rounded-md transition-colors ${
+                             index === selectedSearchIndex 
+                               ? 'bg-gray-100 dark:bg-[#313D4A] text-[#3C50E0]' 
+                               : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray-50 dark:hover:bg-[#313D4A] hover:text-[#3C50E0]'
+                           }`}
                          >
                            {result.name}
                          </NavLink>
@@ -148,11 +174,12 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 2xsm:gap-7">
-          <ul className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <ul className="flex items-center gap-2 sm:gap-4">
             {/* Dark Mode */}
             <li>
               <button 
+                aria-label="Toggle Dark Mode"
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
                 className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full text-[#64748B] dark:text-[#8A99AF] hover:text-[#3C50E0]"
               >
@@ -163,6 +190,8 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
             {/* Notification */}
             <li className="relative">
               <button 
+                aria-label="Notifications"
+                aria-expanded={notifOpen}
                 onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }}
                 className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border border-stroke dark:border-[#2E3A47] bg-gray-50 dark:bg-[#313D4A] text-[#64748B] dark:text-[#8A99AF] hover:text-[#3C50E0]"
               >
@@ -184,18 +213,36 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                         </button>
                       )}
                     </div>
-                    <ul className="flex h-auto flex-col overflow-y-auto">
-                      {notifications.map((n) => (
-                        <li key={n.id}>
-                          <a className={`flex flex-col gap-2.5 border-t border-stroke dark:border-[#2E3A47] px-4.5 py-3 hover:bg-gray-50 dark:hover:bg-[#313D4A] ${!n.read ? 'bg-[#F1F5F9] dark:bg-[#1A222C]/50' : ''}`} href="#">
-                            <p className="text-sm">
-                              <span className="text-[#1C2434] dark:text-white font-medium">{n.title}</span> {n.description}
-                            </p>
-                            <p className="text-xs">{n.date}</p>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                    <DataState 
+                      loading={notifLoading}
+                      error={notifError}
+                      onRetry={fetchNotifs}
+                      isEmpty={!notifications || notifications.length === 0}
+                      emptyMessage="No notifications yet"
+                      skeleton={
+                        <div className="p-4 flex flex-col gap-4 animate-pulse">
+                           <div className="h-12 bg-gray-200 dark:bg-[#313D4A] rounded"></div>
+                           <div className="h-12 bg-gray-200 dark:bg-[#313D4A] rounded"></div>
+                           <div className="h-12 bg-gray-200 dark:bg-[#313D4A] rounded"></div>
+                        </div>
+                      }
+                    >
+                      <ul className="flex h-auto flex-col overflow-y-auto">
+                        {notifications?.map((n) => (
+                          <li key={n.id}>
+                            <button 
+                              onClick={() => { if(!n.read) markRead(n.id); }}
+                              className={`w-full text-left flex flex-col gap-2.5 border-t border-stroke dark:border-[#2E3A47] px-4.5 py-3 hover:bg-gray-50 dark:hover:bg-[#313D4A] ${!n.read ? 'bg-[#F1F5F9] dark:bg-[#1A222C]/50' : ''}`}
+                            >
+                              <p className="text-sm text-[#64748B] dark:text-[#8A99AF]">
+                                <span className="text-[#1C2434] dark:text-white font-medium">{n.title}</span> {n.description}
+                              </p>
+                              <p className="text-xs text-[#64748B] dark:text-[#8A99AF]">{n.date}</p>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </DataState>
                   </div>
                 </>
               )}
@@ -204,19 +251,21 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* User Profile */}
           <div className="relative">
-            <div 
+            <button 
+              className="flex items-center gap-4 ml-2 sm:ml-4" 
               onClick={() => { setProfileOpen(!profileOpen); setNotifOpen(false); }}
-              className="flex items-center gap-4 cursor-pointer ml-4"
+              aria-label="User Profile Dropdown"
+              aria-expanded={profileOpen}
             >
-              <span className="h-10 w-10 rounded-full overflow-hidden">
-                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User" />
+              <span className="h-8 w-8 sm:h-10 sm:w-10 rounded-full overflow-hidden shrink-0">
+                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User" loading="lazy" className="w-full h-full object-cover" />
               </span>
               <span className="hidden text-right lg:block">
-                <span className="block text-sm font-semibold text-[#1C2434] dark:text-white">Musharof</span>
-                <span className="block text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">Team Manager</span>
+                <span className="block text-sm font-semibold text-[#1C2434] dark:text-white">{user?.full_name || user?.username || 'User'}</span>
+                <span className="block text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">Administrator</span>
               </span>
               <ChevronDown className="hidden sm:block w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
-            </div>
+            </button>
 
             {profileOpen && (
               <>
@@ -225,7 +274,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                   <ul className="flex flex-col gap-5 border-b border-stroke dark:border-[#2E3A47] px-6 py-7.5">
                     <li>
                       <NavLink to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-[#3C50E0] text-[#64748B] dark:text-[#8A99AF]">
-                        <User className="w-5 h-5" />
+                        <UserIcon className="w-5 h-5" />
                         My Profile
                       </NavLink>
                     </li>

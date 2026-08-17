@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const SalesStatistics = () => {
-  const [data, setData] = useState(null);
   const [period, setPeriod] = useState('Daily');
-
-  useEffect(() => {
-    api.get('/sales/statistics')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="h-[400px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] animate-pulse mb-4 md:mb-6 2xl:mb-7.5" />;
+  const { data, loading, error, fetchData } = useApi('/sales/statistics');
 
   const options = {
     chart: {
@@ -59,41 +51,61 @@ const SalesStatistics = () => {
 
   return (
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default mb-4 md:mb-6 2xl:mb-7.5">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Users & Revenue Statistics</h4>
-          <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Visualize month-to-month progress and engagement.</span>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-full w-full animate-pulse pt-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div><div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div><div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+              <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+            </div>
+            <div className="flex items-center gap-6 mb-4">
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700"></div><div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700"></div><div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+            </div>
+            <div className="w-full h-[320px] bg-gradient-to-t from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded opacity-50"></div>
+          </div>
+        }
+      >
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Users & Revenue Statistics</h4>
+            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Visualize month-to-month progress and engagement.</span>
+          </div>
+          
+          <div className="flex bg-[#F1F5F9] dark:bg-[#1A222C] rounded-md p-1">
+            {['Daily', 'Weekly', 'Monthly'].map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-4 py-1.5 text-xs font-medium rounded-sm transition-colors ${
+                  period === p ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
         </div>
-        
-        <div className="flex bg-[#F1F5F9] dark:bg-[#1A222C] rounded-md p-1">
-          {['Daily', 'Weekly', 'Monthly'].map((p) => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-sm transition-colors ${
-                period === p ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <div className="flex items-center gap-6 mb-4">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#3C50E0]"></span>
-          <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Online Sales</span>
+        <div className="flex items-center gap-6 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#3C50E0]"></span>
+            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Online Sales</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#80CAEE]"></span>
+            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Offline Sales</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#80CAEE]"></span>
-          <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Offline Sales</span>
-        </div>
-      </div>
 
-      <div id="salesStatisticsChart" className="-ml-5">
-        <ReactApexChart options={options} series={data.series} type="area" height={320} />
-      </div>
+        <div id="salesStatisticsChart" className="-ml-5">
+          <ReactApexChart options={options} series={data?.series || []} type="area" height={320} />
+        </div>
+      </DataState>
     </div>
   );
 };

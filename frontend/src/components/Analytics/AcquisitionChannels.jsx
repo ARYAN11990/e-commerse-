@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const AcquisitionChannels = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/analytics/acquisition-channels')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="animate-pulse bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] h-[400px] mb-4 md:mb-6 2xl:mb-7.5" />;
+  const { data, loading, error, fetchData } = useApi('/analytics/acquisition-channels');
 
   const options = {
     chart: {
@@ -81,10 +74,25 @@ const AcquisitionChannels = () => {
           <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Social</span>
         </div>
       </div>
-      
-      <div id="chartTwo" className="-ml-5">
-        <ReactApexChart options={options} series={data.series} type="bar" height={350} />
-      </div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-[350px] w-full animate-pulse flex items-end gap-3 px-4 pb-4 mt-6">
+            <div className="h-2/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/2 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-full w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-3/4 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+          </div>
+        }
+      >
+        <div id="chartTwo" className="-ml-5">
+          <ReactApexChart options={options} series={data?.series || []} type="bar" height={350} />
+        </div>
+      </DataState>
     </div>
   );
 };

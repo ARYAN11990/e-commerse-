@@ -34,3 +34,17 @@ class MockProvider(BaseProvider):
 
     def get_finance_data(self) -> Dict[str, Any]:
         return get_dashboard_state("finance", mg.generate_finance_state)
+
+    def get_notifications(self) -> list:
+        return get_dashboard_state("notifications", mg.generate_notifications_state)
+
+    def mark_notification_read(self, notif_id: int):
+        notifs = self.get_notifications()
+        for n in notifs:
+            if n["id"] == notif_id:
+                n["read"] = True
+
+    def mark_all_notifications_read(self):
+        notifs = self.get_notifications()
+        for n in notifs:
+            n["read"] = True

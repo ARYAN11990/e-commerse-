@@ -67,3 +67,60 @@ def get_sales_service() -> SalesService:
 def get_finance_service() -> FinanceService:
     repo = FinanceRepository(_provider)
     return FinanceService(repo)
+
+# --- AUTH DEPENDENCIES ---
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+import jwt
+from jose import JWTError
+from utils.security import SECRET_KEY, ALGORITHM, TokenData
+from services.auth_service import AuthService
+from providers.auth_provider import AuthMockProvider, UserInDB
+from services.user_service import UserService
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
+
+# Shared single instance
+auth_provider_instance = AuthMockProvider()
+auth_service_instance = AuthService(auth_provider_instance)
+user_service_instance = UserService(auth_provider_instance)
+
+def get_auth_service() -> AuthService:
+    return auth_service_instance
+
+def get_user_service() -> UserService:
+    return user_service_instance
+
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+        
+    user = auth_service_instance.get_user(username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user
+
+async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
+    if not hasattr(current_user, 'status') or current_user.status != "Active":
+        raise HTTPException(status_code=403, detail="Inactive user")
+    return current_user
+
+async def require_admin_role(current_user: UserInDB = Depends(get_current_active_user)):
+    if current_user.role != "Admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to perform this action"
+        )
+    return current_user
+

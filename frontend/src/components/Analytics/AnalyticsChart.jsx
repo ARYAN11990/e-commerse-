@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const AnalyticsChart = () => {
-  const [chartData, setChartData] = useState(null);
   const [period, setPeriod] = useState('30 days');
-
-  useEffect(() => {
-    api.get('/analytics/visitor-analytics')
-      .then((data) => setChartData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!chartData) return <div className="h-[400px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] animate-pulse mb-4 md:mb-6 2xl:mb-7.5" />;
+  const { data: chartData, loading, error, fetchData } = useApi('/analytics/visitor-analytics');
 
   const options = {
     chart: {
@@ -85,10 +78,25 @@ const AnalyticsChart = () => {
           ))}
         </div>
       </div>
-      
-      <div id="chartOne" className="-ml-5">
-        <ReactApexChart options={options} series={series} type="bar" height={350} />
-      </div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!chartData || !chartData.data || chartData.data.length === 0} 
+        skeleton={
+          <div className="h-[350px] w-full animate-pulse flex items-end gap-3 px-4 pb-4 mt-6">
+            <div className="h-2/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/2 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-full w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-3/4 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+            <div className="h-1/3 w-full bg-gray-200 dark:bg-gray-700 rounded-t"></div>
+          </div>
+        }
+      >
+        <div id="chartOne" className="-ml-5">
+          <ReactApexChart options={options} series={[{name: 'Visitors', data: chartData?.data || []}]} type="bar" height={350} />
+        </div>
+      </DataState>
     </div>
   );
 };

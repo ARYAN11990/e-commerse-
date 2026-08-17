@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const Dividend = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get('/stocks/dividend')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="h-[200px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] animate-pulse mb-4 md:mb-6 2xl:mb-7.5" />;
+  const { data, loading, error, fetchData } = useApi('/stocks/dividend');
 
   const options = {
     chart: {
@@ -54,16 +46,30 @@ const Dividend = () => {
 
   return (
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] px-5 pt-6 pb-2.5 shadow-default sm:px-7.5 xl:pb-1 mb-4 md:mb-6 2xl:mb-7.5">
-      <div className="mb-4 flex justify-between items-center">
-        <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Dividend</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
-      </div>
-      
-      <div id="dividendChart" className="-ml-5">
-        <ReactApexChart options={options} series={data.series} type="bar" height={200} />
-      </div>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-[200px] w-full animate-pulse flex items-end gap-2 px-2 pb-2">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-t" style={{ height: `${Math.random() * 60 + 20}%` }}></div>
+            ))}
+          </div>
+        }
+      >
+        <div className="mb-4 flex justify-between items-center">
+          <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Dividend</h4>
+          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div id="dividendChart" className="-ml-5">
+          <ReactApexChart options={options} series={data?.series || []} type="bar" height={200} />
+        </div>
+      </DataState>
     </div>
   );
 };

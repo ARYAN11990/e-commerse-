@@ -1,19 +1,11 @@
-import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { MoreVertical } from 'lucide-react';
-import { api } from '../../services/api';
+import { useApi } from '../../hooks/useApi';
+import DataState from '../DataState';
 
 const ProductPerformance = () => {
-  const [data, setData] = useState(null);
   const [tab, setTab] = useState('Daily Sales');
-
-  useEffect(() => {
-    api.get('/saas/product-performance')
-      .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  if (!data) return <div className="animate-pulse h-[500px] bg-white dark:bg-[#24303F] rounded-xl border border-stroke dark:border-[#2E3A47] h-full" />;
+  const { data, loading, error, fetchData } = useApi('/saas/product-performance');
 
   const options = {
     chart: {
@@ -62,50 +54,67 @@ const ProductPerformance = () => {
         </button>
       </div>
 
-      <div className="flex bg-[#F1F5F9] dark:bg-[#1A222C] rounded-md p-1 mb-6">
-        {['Daily Sales', 'Online Sales', 'New Users'].map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-2 text-xs font-medium rounded-sm transition-colors text-center ${
-              tab === t ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
-            }`}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex justify-between mb-8">
-        <div>
-          <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Digital Product</span>
-          <span className="text-lg font-bold text-[#1C2434] dark:text-white flex items-center gap-1">
-            <span className="text-[#10B981] text-sm">↑</span> {data.digital_product.value}
-          </span>
-        </div>
-        <div className="text-right">
-          <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Physical Product</span>
-          <span className="text-lg font-bold text-[#1C2434] dark:text-white flex items-center justify-end gap-1">
-            <span className="text-[#EF4444] text-sm">↓</span> {data.physical_product.value}
-          </span>
-        </div>
-      </div>
-
-      <div className="border border-stroke dark:border-[#2E3A47] rounded-xl p-5 flex flex-col justify-between flex-1">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Average Daily Sales</span>
-            <h4 className="text-[28px] font-bold text-[#1C2434] dark:text-white leading-none">{data.average_daily_sales.value}</h4>
+      <DataState 
+        loading={loading} 
+        error={error} 
+        onRetry={fetchData} 
+        isEmpty={!data || !data.series || data.series.length === 0} 
+        skeleton={
+          <div className="h-full w-full animate-pulse pt-2">
+            <div className="flex bg-gray-200 dark:bg-gray-700 rounded-md p-1 mb-6 h-10"></div>
+            <div className="flex justify-between mb-8">
+              <div><div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div><div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+              <div className="text-right flex flex-col items-end"><div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div><div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div></div>
+            </div>
+            <div className="border border-stroke dark:border-[#2E3A47] rounded-xl p-5 h-[300px]"></div>
           </div>
-          <span className="rounded-full bg-[#EF4444]/10 px-2 py-0.5 text-xs font-medium text-[#EF4444]">
-            ↓ {data.average_daily_sales.change}
-          </span>
+        }
+      >
+        <div className="flex bg-[#F1F5F9] dark:bg-[#1A222C] rounded-md p-1 mb-6">
+          {['Daily Sales', 'Online Sales', 'New Users'].map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-2 text-xs font-medium rounded-sm transition-colors text-center ${
+                tab === t ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+              }`}
+            >
+              {t}
+            </button>
+          ))}
         </div>
-        
-        <div className="-ml-5 mt-auto">
-          <ReactApexChart options={options} series={data.series} type="bar" height={220} />
+
+        <div className="flex justify-between mb-8">
+          <div>
+            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Digital Product</span>
+            <span className="text-lg font-bold text-[#1C2434] dark:text-white flex items-center gap-1">
+              <span className="text-[#10B981] text-sm">↑</span> {data?.digital_product?.value}
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Physical Product</span>
+            <span className="text-lg font-bold text-[#1C2434] dark:text-white flex items-center justify-end gap-1">
+              <span className="text-[#EF4444] text-sm">↓</span> {data?.physical_product?.value}
+            </span>
+          </div>
         </div>
-      </div>
+
+        <div className="border border-stroke dark:border-[#2E3A47] rounded-xl p-5 flex flex-col justify-between flex-1">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF] block mb-1">Average Daily Sales</span>
+              <h4 className="text-[28px] font-bold text-[#1C2434] dark:text-white leading-none">{data?.average_daily_sales?.value}</h4>
+            </div>
+            <span className="rounded-full bg-[#EF4444]/10 px-2 py-0.5 text-xs font-medium text-[#EF4444]">
+              ↓ {data?.average_daily_sales?.change}
+            </span>
+          </div>
+          
+          <div className="-ml-5 mt-auto">
+            <ReactApexChart options={options} series={data?.series || []} type="bar" height={220} />
+          </div>
+        </div>
+      </DataState>
     </div>
   );
 };
