@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, X } from 'lucide-react';
-import Input from '../../components/Form/Input';
-import Textarea from '../../components/Form/Textarea';
-import Select from '../../components/Form/Select';
+import { Input } from '../../components/Form/Input';
+import { Textarea } from '../../components/Form/Textarea';
+import { Select } from '../../components/Form/Select';
 import { useToast } from '../../context/ToastContext';
 import { api } from '../../services/api';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
-import Input from '../../components/Form/Input';
+import { Input } from '../../components/Form/Input';
 import { useToast } from '../../context/ToastContext';
 
 const CreateInvoice = () => {
