@@ -6,21 +6,21 @@ router = APIRouter(prefix="/profile", tags=["profile"])
 
 # In-memory mock data
 db_profile = {
-    "first_name": "Musharof",
-    "last_name": "Chowdhury",
-    "job_title": "Team Manager",
-    "location": "Arizona, United States.",
-    "email": "randomuser@pimjo.com",
-    "phone": "+09 363 398 46",
+    "first_name": "ARYAN",
+    "last_name": "PARMAR",
+    "job_title": "Full Stack Developer",
+    "location": "Ahmedabad, Gujarat, India",
+    "email": "aryanparmar855@gmail.com",
+    "phone": "6370977845",
     "bio": "Team Manager",
     "social": {"facebook": "#", "twitter": "#", "linkedin": "#", "instagram": "#"}
 }
 
 db_address = {
-    "country": "United States",
-    "city_state": "Arizona, United States.",
-    "postal_code": "ERT 2489",
-    "tax_id": "AS4568384"
+    "country": "India",
+    "city_state": "Ahmedabad, Gujarat",
+    "postal_code": "380001",
+    "tax_id": "TAX-IND-DEMO-001"
 }
 
 db_security = {

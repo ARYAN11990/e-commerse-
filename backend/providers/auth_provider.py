@@ -24,11 +24,11 @@ class AuthMockProvider:
         self.users_db = {
             admin_id: UserInDB(
                 id=admin_id,
-                username="admin",
-                email="admin@example.com",
+                username="ARYAN PARMAR",
+                email="aryanparmar855@gmail.com",
                 hashed_password=get_password_hash("admin123"),
-                full_name="Admin User",
-                role="Admin",
+                full_name="ARYAN PARMAR",
+                role="Full Stack Developer",
                 status="Active"
             ),
             manager_id: UserInDB(

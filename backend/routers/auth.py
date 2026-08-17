@@ -51,7 +51,8 @@ async def read_users_me(current_user: UserInDB = Depends(get_current_active_user
     return {
         "username": current_user.username,
         "email": current_user.email,
-        "full_name": current_user.full_name
+        "full_name": current_user.full_name,
+        "role": current_user.role
     }
 
 @router.post("/logout")

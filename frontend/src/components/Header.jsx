@@ -270,7 +270,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
               </span>
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-semibold text-[#1C2434] dark:text-white">{user?.full_name || user?.username || 'User'}</span>
-                <span className="block text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">Administrator</span>
+                <span className="block text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">{user?.role || 'Administrator'}</span>
               </span>
               <ChevronDown className="hidden sm:block w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
             </button>
