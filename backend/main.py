@@ -8,16 +8,22 @@ from routers import dashboard, analytics, marketing, crm, stocks, saas, logistic
 
 app = FastAPI(title="TailAdmin Dashboard API")
 
-# Allow CORS configured via environment variables (defaults to localhost:5173 for local dev)
-allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173")
-allowed_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
+# Allow CORS configured via environment variables and explicit defaults
+allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "")
+env_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
+
+# Combine explicit defaults with any origins from the environment variable
+allowed_origins = list(set([
+    "http://localhost:5173",
+    "https://tailadmin1.vercel.app"
+] + env_origins))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Session-ID", "Accept", "Origin", "X-Requested-With"],
 )
 
 from utils.mock_data import session_id_var
