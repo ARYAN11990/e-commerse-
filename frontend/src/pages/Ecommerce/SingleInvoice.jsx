@@ -1,9 +1,113 @@
-import React from 'react';
-import { Printer } from 'lucide-react';
+import React, { useState } from 'react';
+import { Printer, CreditCard, X, CheckCircle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
+
+// Generic Checkout Modal Component
+const CheckoutModal = ({ isOpen, onClose, totalAmount, onSuccess }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handlePay = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        onSuccess();
+        onClose();
+      }, 1500);
+    }, 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-default dark:bg-boxdark">
+        <div className="mb-4 flex items-center justify-between border-b border-stroke pb-3 dark:border-strokedark">
+          <h3 className="text-xl font-bold text-black dark:text-white">Secure Checkout</h3>
+          {!isProcessing && !isSuccess && (
+            <button onClick={onClose} className="text-gray-500 hover:text-black dark:hover:text-white transition">
+              <X className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+
+        {isSuccess ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <CheckCircle className="h-16 w-16 text-[#10B981] mb-4" />
+            <h4 className="text-xl font-bold text-black dark:text-white">Payment Successful!</h4>
+            <p className="text-sm text-[#64748B] dark:text-[#8A99AF] mt-2">Your invoice has been paid.</p>
+          </div>
+        ) : isProcessing ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent mb-4"></div>
+            <h4 className="text-lg font-bold text-black dark:text-white">Processing Payment...</h4>
+            <p className="text-sm text-[#64748B] dark:text-[#8A99AF] mt-2">Please do not close this window.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <div className="rounded border border-stroke p-4 dark:border-strokedark bg-gray-50 dark:bg-meta-4">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Amount Due</span>
+                <span className="text-xl font-bold text-black dark:text-white">{totalAmount}</span>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-black dark:text-white">Select Payment Method</label>
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center justify-between rounded border border-primary bg-primary/5 p-3 cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <input type="radio" name="payment" defaultChecked className="h-4 w-4 text-primary focus:ring-primary" />
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5 text-primary" />
+                      <span className="text-sm font-medium text-black dark:text-white">Visa ending in 1234</span>
+                    </div>
+                  </div>
+                  <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded">Primary</span>
+                </label>
+                <label className="flex items-center justify-between rounded border border-stroke p-3 cursor-pointer hover:bg-gray-50 dark:border-strokedark dark:hover:bg-meta-4">
+                  <div className="flex items-center gap-3">
+                    <input type="radio" name="payment" className="h-4 w-4 text-primary focus:ring-primary" />
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5 text-[#64748B] dark:text-[#8A99AF]" />
+                      <span className="text-sm font-medium text-black dark:text-white">Mastercard ending in 5678</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div className="mt-2 flex justify-end gap-3">
+              <button onClick={onClose} className="rounded border border-stroke py-2 px-4 font-medium text-black hover:bg-gray-50 dark:border-strokedark dark:text-white dark:hover:bg-meta-4 transition">Cancel</button>
+              <button onClick={handlePay} className="rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90 transition">Pay {totalAmount}</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const SingleInvoice = () => {
+  const { addToast } = useToast();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  const handlePaymentSuccess = () => {
+    addToast('success', 'Payment Complete', 'Invoice #348 has been marked as paid.');
+  };
+
   return (
     <div className="p-4 md:p-6 2xl:p-10">
+      <CheckoutModal 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        totalAmount="$4,235"
+        onSuccess={handlePaymentSuccess}
+      />
+
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-title-md2 font-bold text-black dark:text-white">
           Invoice
@@ -130,7 +234,7 @@ const SingleInvoice = () => {
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-4.5 mt-8">
-              <button onClick={() => window.alert('Proceeding to secure payment gateway...')} className="flex justify-center rounded border border-stroke py-2.5 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white transition">
+              <button onClick={() => setIsCheckoutOpen(true)} className="flex justify-center rounded border border-stroke py-2.5 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white transition">
                 Proceed to payment
               </button>
               <button onClick={() => window.print()} className="flex items-center justify-center gap-2 rounded bg-primary py-2.5 px-6 font-medium text-white hover:bg-opacity-90 transition">

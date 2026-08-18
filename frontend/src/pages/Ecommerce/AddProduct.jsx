@@ -117,9 +117,9 @@ const AddProduct = () => {
           </div>
           <div className="flex flex-col gap-5.5 p-6.5">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              <Input label="Weight (kg)" name="weight2" type="number" placeholder="15" onChange={()=>{}} />
-              <Input label="Length (cm)" name="length2" type="number" placeholder="120" onChange={()=>{}} />
-              <Input label="Width (cm)" name="width2" type="number" placeholder="23" onChange={()=>{}} />
+              <Input label="Weight (kg)" name="weight" type="number" placeholder="15" value={formData.weight} onChange={handleChange} />
+              <Input label="Length (cm)" name="length" type="number" placeholder="120" value={formData.length} onChange={handleChange} />
+              <Input label="Width (cm)" name="width" type="number" placeholder="23" value={formData.width} onChange={handleChange} />
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>

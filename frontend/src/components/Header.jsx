@@ -287,10 +287,10 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                       </NavLink>
                     </li>
                     <li>
-                      <button className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-[#3C50E0] text-[#64748B] dark:text-[#8A99AF]">
+                      <NavLink to="/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-[#3C50E0] text-[#64748B] dark:text-[#8A99AF]">
                         <Settings className="w-5 h-5" />
                         Account Settings
-                      </button>
+                      </NavLink>
                     </li>
                   </ul>
                   <button onClick={handleLogout} className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-[#3C50E0] text-[#64748B] dark:text-[#8A99AF]">

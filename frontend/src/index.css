@@ -20,6 +20,13 @@
   --color-gray-1: #F1F5F9;
   --color-gray-2: #F7F9FC;
   --color-gray-3: #FAFAFA;
+  
+  /* TailAdmin Specific Colors */
+  --color-boxdark: #24303F;
+  --color-boxdark-2: #1A222C;
+  --color-strokedark: #2E3A47;
+  --color-meta-4: #313D4A;
+  --color-gray: #EFF4FB;
 }
 
 body {
@@ -28,7 +35,7 @@ body {
 }
 
 .dark body {
-  background-color: var(--color-black);
+  background-color: var(--color-boxdark-2);
   color: var(--color-bodydark);
 }
 

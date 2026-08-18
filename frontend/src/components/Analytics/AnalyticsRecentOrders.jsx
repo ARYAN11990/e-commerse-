@@ -53,7 +53,8 @@ const AnalyticsRecentOrders = () => {
   ];
 
   const filterOptions = [
-    { key: 'country', label: 'Country', options: ['us', 'gb', 'fr', 'de', 'fi', 'be', 'in'] }
+    { key: 'country', label: 'Country', options: ['us', 'gb', 'fr', 'de', 'fi', 'be', 'in'] },
+    { key: 'category', label: 'Category', options: ['UI Kit', 'Templates', 'SaaS', 'Dashboard'] }
   ];
 
   return (

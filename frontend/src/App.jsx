@@ -7,6 +7,7 @@ import PublicRoute from './components/PublicRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { TaskProvider } from './context/TaskContext';
 
 const ECommerce = lazy(() => import('./pages/ECommerce'));
 const Analytics = lazy(() => import('./pages/Analytics'));
@@ -19,11 +20,17 @@ const AI = lazy(() => import('./pages/AI'));
 const Sales = lazy(() => import('./pages/Sales'));
 const Finance = lazy(() => import('./pages/Finance'));
 const UserProfile = lazy(() => import('./pages/UserProfile'));
+const Settings = lazy(() => import('./pages/Settings'));
 const Users = lazy(() => import('./pages/Users'));
+const CalendarApp = lazy(() => import('./pages/CalendarApp'));
 const Login = lazy(() => import('./pages/Auth/Login'));
 const Register = lazy(() => import('./pages/Auth/Register'));
 const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/Auth/ResetPassword'));
+const VerifyEmail = lazy(() => import('./pages/Auth/VerifyEmail'));
+
+const TaskList = lazy(() => import('./pages/Task/TaskList'));
+const TaskKanban = lazy(() => import('./pages/Task/TaskKanban'));
 
 // Ecommerce Sub-pages
 const Products = lazy(() => import('./pages/Ecommerce/Products'));
@@ -40,7 +47,7 @@ function App() {
   const location = useLocation();
   const { loading } = useAuth();
   
-  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
+  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'].includes(location.pathname);
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center bg-[#F1F5F9] dark:bg-[#1A222C]">Loading...</div>;
@@ -48,6 +55,7 @@ function App() {
 
   return (
     <ToastProvider>
+      <TaskProvider>
       <div className="flex h-screen overflow-hidden bg-[#F1F5F9] dark:bg-[#1A222C] text-[#64748B] dark:text-[#8A99AF] font-inter">
         {!isAuthPage && <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
         
@@ -68,6 +76,7 @@ function App() {
                   <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
                   <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
                   <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+                  <Route path="/verify-email" element={<PublicRoute><VerifyEmail /></PublicRoute>} />
 
                   {/* Protected Dashboard Routes */}
                   <Route path="/" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
@@ -82,7 +91,13 @@ function App() {
                   <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
                   <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                  <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                   <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+                  <Route path="/calendar" element={<ProtectedRoute><CalendarApp /></ProtectedRoute>} />
+
+                  {/* Task Routes */}
+                  <Route path="/task/list" element={<ProtectedRoute><TaskList /></ProtectedRoute>} />
+                  <Route path="/task/kanban" element={<ProtectedRoute><TaskKanban /></ProtectedRoute>} />
 
                   {/* Ecommerce Sub-pages Routes */}
                   <Route path="/ecommerce/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
@@ -100,6 +115,7 @@ function App() {
         </main>
       </div>
     </div>
+    </TaskProvider>
     </ToastProvider>
   );
 }

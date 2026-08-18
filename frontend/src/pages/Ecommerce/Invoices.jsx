@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Download, Filter, Search, MoreHorizontal, Plus } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
@@ -8,6 +8,11 @@ const Invoices = () => {
   const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState('All Invoices');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedInvoices, setSelectedInvoices] = useState([]);
+  
+  // Filter Dropdown state
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const filterRef = useRef(null);
 
   const allInvoices = [
     { id: '#323534', customer: 'Lindsey Curtis', creationDate: 'August 7, 2028', dueDate: 'February 28, 2028', total: '999', status: 'Paid' },
@@ -37,16 +42,65 @@ const Invoices = () => {
     return result;
   }, [activeTab, searchQuery]);
 
-  const handleExport = () => {
-    addToast('success', 'Export Started', 'Your invoice export will begin shortly.');
+  // Handle outside click for filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilterDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedInvoices(filteredInvoices.map(inv => inv.id));
+    } else {
+      setSelectedInvoices([]);
+    }
   };
 
-  const handleFilter = () => {
-    addToast('info', 'Filter Menu', 'Advanced filtering options would open here.');
+  const handleSelectInvoice = (id) => {
+    setSelectedInvoices(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleExport = () => {
+    const dataToExport = selectedInvoices.length > 0 
+      ? allInvoices.filter(inv => selectedInvoices.includes(inv.id))
+      : filteredInvoices;
+
+    if (dataToExport.length === 0) {
+      addToast('warning', 'Export Failed', 'No data to export.');
+      return;
+    }
+
+    // Generate CSV
+    const headers = ['Invoice Number', 'Customer', 'Creation Date', 'Due Date', 'Total', 'Status'];
+    const csvContent = [
+      headers.join(','),
+      ...dataToExport.map(inv => 
+        `"${inv.id}","${inv.customer}","${inv.creationDate}","${inv.dueDate}","${inv.total}","${inv.status}"`
+      )
+    ].join('\\n');
+
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'invoices.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    addToast('success', 'Export Successful', 'invoices.csv has been downloaded.');
   };
 
   const handleActionClick = (id) => {
-    addToast('info', 'Action Menu', `Opened action menu for invoice ${id}`);
+    navigate('/ecommerce/single-invoice');
   };
 
   return (
@@ -140,10 +194,38 @@ const Invoices = () => {
               </div>
 
               {/* Action Buttons */}
-              <button onClick={handleFilter} className="flex items-center justify-center gap-2 rounded-md border border-stroke py-2 px-4 text-sm font-medium text-black hover:bg-gray-50 dark:border-strokedark dark:text-white dark:hover:bg-meta-4 transition">
-                <Filter className="h-4 w-4" />
-                Filter
-              </button>
+              <div className="relative" ref={filterRef}>
+                <button 
+                  onClick={() => setShowFilterDropdown(!showFilterDropdown)} 
+                  className={`flex items-center justify-center gap-2 rounded-md border border-stroke py-2 px-4 text-sm font-medium transition ${
+                    showFilterDropdown ? 'bg-gray-50 dark:bg-meta-4 text-primary border-primary' : 'text-black hover:bg-gray-50 dark:border-strokedark dark:text-white dark:hover:bg-meta-4'
+                  }`}
+                >
+                  <Filter className="h-4 w-4" />
+                  Filter
+                </button>
+                {/* Filter Dropdown Menu */}
+                {showFilterDropdown && (
+                  <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-md border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-3">
+                    <h5 className="mb-2 text-sm font-bold text-black dark:text-white">Filter by Status</h5>
+                    <div className="flex flex-col gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-meta-4 p-1 rounded">
+                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary" onChange={() => {setActiveTab('All Invoices'); setShowFilterDropdown(false)}} checked={activeTab === 'All Invoices'} />
+                        <span className="text-sm font-medium text-black dark:text-white">All Invoices</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-meta-4 p-1 rounded">
+                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary" onChange={() => {setActiveTab('Paid'); setShowFilterDropdown(false)}} checked={activeTab === 'Paid'} />
+                        <span className="text-sm font-medium text-black dark:text-white">Paid</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-meta-4 p-1 rounded">
+                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary" onChange={() => {setActiveTab('Unpaid'); setShowFilterDropdown(false)}} checked={activeTab === 'Unpaid'} />
+                        <span className="text-sm font-medium text-black dark:text-white">Unpaid</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <button onClick={handleExport} className="flex items-center justify-center gap-2 rounded-md border border-stroke py-2 px-4 text-sm font-medium text-black hover:bg-gray-50 dark:border-strokedark dark:text-white dark:hover:bg-meta-4 transition">
                 <Download className="h-4 w-4" />
                 Export
@@ -158,7 +240,12 @@ const Invoices = () => {
             <thead>
               <tr className="border-b border-stroke dark:border-strokedark text-left">
                 <th className="py-5 px-4 font-medium text-black dark:text-white xl:pl-7.5 w-12 text-center">
-                  <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
+                  <input 
+                    type="checkbox" 
+                    onChange={handleSelectAll}
+                    checked={filteredInvoices.length > 0 && selectedInvoices.length === filteredInvoices.length}
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" 
+                  />
                 </th>
                 <th className="py-5 px-4 text-sm font-medium text-black dark:text-white">Invoice Number</th>
                 <th className="py-5 px-4 text-sm font-medium text-black dark:text-white">Customer <span className="text-xs text-gray-400 ml-1">⇕</span></th>
@@ -173,7 +260,12 @@ const Invoices = () => {
               {filteredInvoices.length > 0 ? filteredInvoices.map((invoice, idx) => (
                 <tr key={idx} className="border-b border-stroke dark:border-strokedark last:border-0 hover:bg-gray-50 dark:hover:bg-meta-4/50 transition">
                   <td className="py-6 px-4 xl:pl-7.5 text-center">
-                    <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
+                    <input 
+                      type="checkbox" 
+                      onChange={() => handleSelectInvoice(invoice.id)}
+                      checked={selectedInvoices.includes(invoice.id)}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" 
+                    />
                   </td>
                   <td className="py-6 px-4">
                     <p className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">{invoice.id}</p>
@@ -200,7 +292,7 @@ const Invoices = () => {
                     </span>
                   </td>
                   <td className="py-6 px-4 xl:pr-7.5 text-center">
-                    <button onClick={() => handleActionClick(invoice.id)} className="text-[#64748B] hover:text-primary transition">
+                    <button onClick={() => handleActionClick(invoice.id)} className="text-[#64748B] hover:text-primary transition p-2">
                       <MoreHorizontal className="h-5 w-5" />
                     </button>
                   </td>

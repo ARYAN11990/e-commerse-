@@ -6,6 +6,7 @@ import { Select } from '../components/Form/Select';
 import { api } from '../services/api';
 import { Plus, X, Trash2 } from 'lucide-react';
 import ConfirmModal from '../components/ConfirmModal';
+import FormModal from '../components/FormModal';
 import { useToast } from '../context/ToastContext';
 
 const Users = () => {
@@ -189,68 +190,41 @@ const Users = () => {
       />
 
       {/* Add/Edit Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-default dark:bg-[#24303F]">
-            <div className="mb-4 flex items-center justify-between border-b border-stroke pb-4 dark:border-[#2E3A47]">
-              <h3 className="text-xl font-bold text-[#1C2434] dark:text-white">
-                {editingUser ? 'Edit User' : 'Add New User'}
-              </h3>
-              <button onClick={handleCloseModal} className="text-gray-400 hover:text-black dark:hover:text-white">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            
-            <Form
-              initialValues={editingUser || { username: '', email: '', password: '', full_name: '', role: 'Customer', status: 'Active' }}
-              validationRules={{
-                username: { required: true, minLength: 3 },
-                email: { required: true, email: true },
-                password: { required: !editingUser, minLength: editingUser ? undefined : 6 },
-                role: { required: true },
-                status: { required: true }
-              }}
-              onSubmit={handleSubmit}
-            >
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input name="full_name" label="Full Name" placeholder="Enter full name" />
-                <Input name="username" label="Username" placeholder="Enter username" />
-              </div>
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input name="email" type="email" label="Email" placeholder="Enter email address" />
-                <Input name="password" type="password" label={editingUser ? "New Password (Optional)" : "Password"} placeholder="Enter password" />
-              </div>
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Select name="role" label="Role" options={[
-                  { value: 'Admin', label: 'Admin' },
-                  { value: 'Manager', label: 'Manager' },
-                  { value: 'Employee', label: 'Employee' },
-                  { value: 'Customer', label: 'Customer' },
-                ]} />
-                <Select name="status" label="Status" options={[
-                  { value: 'Active', label: 'Active' },
-                  { value: 'Inactive', label: 'Inactive' },
-                ]} />
-              </div>
-              <div className="mt-6 flex justify-end gap-3">
-                <button 
-                  type="button" 
-                  onClick={handleCloseModal}
-                  className="rounded-md border border-stroke dark:border-[#2E3A47] px-6 py-2 font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="rounded-md bg-[#3C50E0] px-6 py-2 font-medium text-white hover:bg-opacity-90"
-                >
-                  Save
-                </button>
-              </div>
-            </Form>
-          </div>
+      <FormModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        title={editingUser ? 'Edit User' : 'Add New User'}
+        initialValues={editingUser || { username: '', email: '', password: '', full_name: '', role: 'Customer', status: 'Active' }}
+        validationRules={{
+          username: { required: true, minLength: 3 },
+          email: { required: true, email: true },
+          password: { required: !editingUser, minLength: editingUser ? undefined : 6 },
+          role: { required: true },
+          status: { required: true }
+        }}
+        onSubmit={handleSubmit}
+      >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Input name="full_name" label="Full Name" placeholder="Enter full name" />
+          <Input name="username" label="Username" placeholder="Enter username" />
         </div>
-      )}
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Input name="email" type="email" label="Email" placeholder="Enter email address" />
+          <Input name="password" type="password" label={editingUser ? "New Password (Optional)" : "Password"} placeholder="Enter password" />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Select name="role" label="Role" options={[
+            { value: 'Admin', label: 'Admin' },
+            { value: 'Manager', label: 'Manager' },
+            { value: 'Employee', label: 'Employee' },
+            { value: 'Customer', label: 'Customer' },
+          ]} />
+          <Select name="status" label="Status" options={[
+            { value: 'Active', label: 'Active' },
+            { value: 'Inactive', label: 'Inactive' },
+          ]} />
+        </div>
+      </FormModal>
       {/* Bulk Delete Confirm Modal */}
       <ConfirmModal 
         isOpen={bulkDeleteModalOpen}

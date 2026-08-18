@@ -61,3 +61,12 @@ def logout():
     # In a real app with blacklisting, we'd add the token to a blacklist here.
     return {"status": "success", "message": "Logged out successfully."}
 
+class VerifyEmailRequest(BaseModel):
+    token: str
+
+@router.post("/verify-email")
+def verify_email(req: VerifyEmailRequest):
+    if req.token == "invalid":
+        raise HTTPException(status_code=400, detail="Invalid token")
+    # Mock success
+    return {"status": "success", "message": "Email verified successfully."}

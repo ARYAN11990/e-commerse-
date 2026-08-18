@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Form, Input } from '../../components/Form';
+import { useToast } from '../../context/ToastContext';
 
 const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const validationRules = {
     username: {
@@ -21,14 +23,21 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = async (values) => {
-    await register({ 
-      username: values.username, 
-      email: values.email, 
-      password: values.password, 
-      full_name: values.username 
-    });
-    navigate('/login');
+  const handleSubmit = async (values, { setApiError }) => {
+    try {
+      await register({ 
+        username: values.username, 
+        email: values.email, 
+        password: values.password, 
+        full_name: values.username 
+      });
+      showToast('Registration successful! Please verify your email.', 'success');
+      navigate('/verify-email?token=mock_registration_token');
+    } catch (err) {
+      showToast(err.message || 'Registration failed', 'error');
+      setApiError(err.message || 'Registration failed');
+      throw err;
+    }
   };
 
   return (

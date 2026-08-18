@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [dashboardOpen, setDashboardOpen] = useState(true);
   const [ecommerceOpen, setEcommerceOpen] = useState(true);
+  const [taskOpen, setTaskOpen] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -277,10 +278,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </NavLink>
               </li>
               <li>
-                <a href="#" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <NavLink to="/calendar" className={({ isActive }) =>
+                  `group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium ${
+                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                  }`
+                }>
                   <Calendar className="w-5 h-5" />
                   Calendar
-                </a>
+                </NavLink>
               </li>
               <li>
                 <NavLink to="/profile" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
@@ -289,13 +294,49 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </NavLink>
               </li>
               <li>
-                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray hover:text-[#1C2434] dark:hover:bg-meta-4 dark:hover:text-white ${taskOpen ? 'bg-gray dark:bg-meta-4 text-[#1C2434] dark:text-white' : ''}`}
+                  onClick={() => setTaskOpen(!taskOpen)}
+                >
                   <div className="flex items-center gap-2.5">
                     <CheckSquare className="w-5 h-5" />
                     Task
                   </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </a>
+                  {taskOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                </div>
+                {/* Task Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${taskOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink
+                        to="/task/list"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        List
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/task/kanban"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Kanban
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li>
                 <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">

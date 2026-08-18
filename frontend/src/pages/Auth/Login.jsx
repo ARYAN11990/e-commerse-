@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Form, Input } from '../../components/Form';
+import { useToast } from '../../context/ToastContext';
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const validationRules = {
     username: {
@@ -15,10 +17,16 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = async (values) => {
-    // Let Form handle the errors and isSubmitting state
-    await login(values.username, values.password);
-    navigate('/');
+  const handleSubmit = async (values, { setApiError }) => {
+    try {
+      await login(values.username, values.password);
+      showToast('Logged in successfully', 'success');
+      navigate('/');
+    } catch (err) {
+      showToast(err.message || 'Login failed', 'error');
+      setApiError(err.message || 'Login failed');
+      throw err;
+    }
   };
 
   return (

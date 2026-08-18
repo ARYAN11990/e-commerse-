@@ -55,7 +55,8 @@ const RecentOrders = () => {
   ];
 
   const filterOptions = [
-    { key: 'status', label: 'Status', options: ['Delivered', 'Pending', 'Canceled'] }
+    { key: 'status', label: 'Status', options: ['Delivered', 'Pending', 'Canceled'] },
+    { key: 'category', label: 'Category', options: ['Laptop', 'Watch', 'SmartPhone', 'Electronics', 'Accessories'] }
   ];
 
   return (
