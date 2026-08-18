@@ -32,6 +32,12 @@ const VerifyEmail = lazy(() => import('./pages/Auth/VerifyEmail'));
 const TaskList = lazy(() => import('./pages/Task/TaskList'));
 const TaskKanban = lazy(() => import('./pages/Task/TaskKanban'));
 
+const FormElements = lazy(() => import('./pages/Forms/FormElements'));
+const FormLayout = lazy(() => import('./pages/Forms/FormLayout'));
+
+const BasicTables = lazy(() => import('./pages/Tables/BasicTables'));
+const DataTables = lazy(() => import('./pages/Tables/DataTables'));
+
 // Ecommerce Sub-pages
 const Products = lazy(() => import('./pages/Ecommerce/Products'));
 const AddProduct = lazy(() => import('./pages/Ecommerce/AddProduct'));
@@ -98,6 +104,14 @@ function App() {
                   {/* Task Routes */}
                   <Route path="/task/list" element={<ProtectedRoute><TaskList /></ProtectedRoute>} />
                   <Route path="/task/kanban" element={<ProtectedRoute><TaskKanban /></ProtectedRoute>} />
+
+                  {/* Forms Routes */}
+                  <Route path="/forms/elements" element={<ProtectedRoute><FormElements /></ProtectedRoute>} />
+                  <Route path="/forms/layout" element={<ProtectedRoute><FormLayout /></ProtectedRoute>} />
+
+                  {/* Tables Routes */}
+                  <Route path="/tables/basic-tables" element={<ProtectedRoute><BasicTables /></ProtectedRoute>} />
+                  <Route path="/tables/data-tables" element={<ProtectedRoute><DataTables /></ProtectedRoute>} />
 
                   {/* Ecommerce Sub-pages Routes */}
                   <Route path="/ecommerce/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />

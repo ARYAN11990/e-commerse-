@@ -3,11 +3,10 @@ import MyProfile from '../components/UserProfile/MyProfile';
 import Address from '../components/UserProfile/Address';
 import Security from '../components/UserProfile/Security';
 import DangerZone from '../components/UserProfile/DangerZone';
-import { ChevronRight } from 'lucide-react';
 import { api } from '../services/api';
 import { useApi } from '../hooks/useApi';
 import DataState from '../components/DataState';
-import { Form, Input, Textarea, useFormContext } from '../components/Form';
+import { Form, Input, Textarea, Select, useFormContext } from '../components/Form';
 import { useToast } from '../context/ToastContext';
 
 const UserProfile = () => {
@@ -24,7 +23,21 @@ const UserProfile = () => {
 
   const handleUpdateProfile = async (values) => {
     try {
-      await api.put('/profile/', values);
+      const payload = {
+        ...values,
+        social: {
+          facebook: values.facebook,
+          twitter: values.twitter,
+          linkedin: values.linkedin,
+          instagram: values.instagram
+        }
+      };
+      delete payload.facebook;
+      delete payload.twitter;
+      delete payload.linkedin;
+      delete payload.instagram;
+      
+      await api.put('/profile/', payload);
       setEditProfileOpen(false);
       showToast('Profile updated successfully', 'success');
       fetchProfileData();
@@ -49,13 +62,31 @@ const UserProfile = () => {
   };
 
   const openProfileEdit = () => {
-    setProfileForm(data.profile);
+    const flatForm = {
+      ...data.profile,
+      facebook: data.profile?.social?.facebook || '',
+      twitter: data.profile?.social?.twitter || '',
+      linkedin: data.profile?.social?.linkedin || '',
+      instagram: data.profile?.social?.instagram || '',
+    };
+    setProfileForm(flatForm);
     setEditProfileOpen(true);
   };
 
   const openAddressEdit = () => {
     setAddressForm(data.address);
     setEditAddressOpen(true);
+  };
+  
+  const handleAvatarUpdate = (url) => {
+    setData(prev => ({
+      ...prev,
+      profile: { ...prev.profile, avatar: url }
+    }));
+  };
+
+  const handleSessionUpdate = (sessions) => {
+    setData(prev => ({ ...prev, sessions }));
   };
 
   return (
@@ -69,18 +100,18 @@ const UserProfile = () => {
       {data && (
         <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#1C2434] dark:text-white">User Profile</h2>
+        <h2 className="text-2xl font-bold text-[#1C2434] dark:text-white">Profile</h2>
         <div className="flex items-center gap-2 mt-2 sm:mt-0 text-sm font-medium">
           <span className="text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white cursor-pointer">Home</span>
-          <ChevronRight className="w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
-          <span className="text-[#3C50E0]">User Profile</span>
+          <span className="text-[#64748B] dark:text-[#8A99AF]">/</span>
+          <span className="text-[#3C50E0]">My Profile</span>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto">
-        <MyProfile data={data.profile} onEdit={openProfileEdit} />
+        <MyProfile data={data.profile} onEdit={openProfileEdit} onAvatarUpdate={handleAvatarUpdate} />
         <Address data={data.address} onEdit={openAddressEdit} />
-        <Security data={data.security} onUpdate2FA={handleUpdate2FA} />
+        <Security data={data.security} sessions={data.sessions} onUpdate2FA={handleUpdate2FA} onUpdateSessions={handleSessionUpdate} />
         <DangerZone />
       </div>
 
@@ -90,14 +121,18 @@ const UserProfile = () => {
           <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setEditProfileOpen(false)}></div>
           <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl rounded-lg bg-white dark:bg-[#24303F] shadow-lg overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-6 border-b border-stroke dark:border-[#2E3A47]">
-              <h3 className="text-xl font-bold text-[#1C2434] dark:text-white">Edit Profile</h3>
+              <h3 className="text-xl font-bold text-[#1C2434] dark:text-white">Edit Personal Information</h3>
             </div>
             <Form 
               initialValues={profileForm} 
               validationRules={{
                 first_name: { required: 'First name is required' },
                 last_name: { required: 'Last name is required' },
-                email: { required: 'Email is required', email: 'Invalid email' },
+                email: { required: 'Email is required', email: 'Invalid email format' },
+                facebook: { url: 'Invalid URL format' },
+                twitter: { url: 'Invalid URL format' },
+                linkedin: { url: 'Invalid URL format' },
+                instagram: { url: 'Invalid URL format' },
               }}
               onSubmit={handleUpdateProfile} 
               className="flex-1 overflow-y-auto p-6 flex flex-col"
@@ -105,11 +140,17 @@ const UserProfile = () => {
               <div className="grid grid-cols-2 gap-4 flex-1">
                 <Input name="first_name" label="First Name" containerClassName="" />
                 <Input name="last_name" label="Last Name" containerClassName="" />
-                <Input name="email" type="email" label="Email" containerClassName="" />
-                <Input name="phone" label="Phone" containerClassName="" />
+                <Input name="email" type="email" label="Email Address" containerClassName="" />
+                <Input name="phone" label="Phone Number" containerClassName="" />
                 <Input name="job_title" label="Job Title" containerClassName="" />
                 <Input name="location" label="Location" containerClassName="" />
                 <Textarea name="bio" label="Bio" containerClassName="col-span-2" rows={3} />
+                
+                <h4 className="col-span-2 font-bold text-[#1C2434] dark:text-white mt-4 mb-2">Social Links</h4>
+                <Input name="facebook" label="Facebook URL" containerClassName="" />
+                <Input name="twitter" label="X / Twitter URL" containerClassName="" />
+                <Input name="linkedin" label="LinkedIn URL" containerClassName="" />
+                <Input name="instagram" label="Instagram URL" containerClassName="" />
               </div>
               
               <div className="flex justify-end gap-4 mt-6">
@@ -139,10 +180,20 @@ const UserProfile = () => {
               className="flex-1 overflow-y-auto p-6 flex flex-col"
             >
               <div className="grid grid-cols-2 gap-4 flex-1">
-                <Input name="country" label="Country" containerClassName="" />
-                <Input name="city_state" label="City/State" containerClassName="" />
+                <Select 
+                  name="country" 
+                  label="Country" 
+                  options={[
+                    { value: 'United States', label: 'United States' },
+                    { value: 'United Kingdom', label: 'United Kingdom' },
+                    { value: 'India', label: 'India' },
+                    { value: 'Canada', label: 'Canada' }
+                  ]}
+                  containerClassName="col-span-2 sm:col-span-1" 
+                />
+                <Input name="city_state" label="City / State" containerClassName="" />
                 <Input name="postal_code" label="Postal Code" containerClassName="" />
-                <Input name="tax_id" label="TAX ID" containerClassName="" />
+                <Input name="tax_id" label="Tax ID" containerClassName="" />
               </div>
               
               <div className="flex justify-end gap-4 mt-6">

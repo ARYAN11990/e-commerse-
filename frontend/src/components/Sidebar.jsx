@@ -6,6 +6,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [dashboardOpen, setDashboardOpen] = useState(true);
   const [ecommerceOpen, setEcommerceOpen] = useState(true);
   const [taskOpen, setTaskOpen] = useState(false);
+  const [formsOpen, setFormsOpen] = useState(false);
+  const [tablesOpen, setTablesOpen] = useState(true);
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -339,22 +341,94 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </li>
               <li>
-                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray hover:text-[#1C2434] dark:hover:bg-meta-4 dark:hover:text-white ${formsOpen ? 'bg-gray dark:bg-meta-4 text-[#1C2434] dark:text-white' : ''}`}
+                  onClick={() => setFormsOpen(!formsOpen)}
+                >
                   <div className="flex items-center gap-2.5">
                     <FileText className="w-5 h-5" />
                     Forms
                   </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </a>
+                  {formsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                </div>
+                {/* Forms Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${formsOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink
+                        to="/forms/elements"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Form Elements
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/forms/layout"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Form Layout
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li>
-                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray hover:text-[#1C2434] dark:hover:bg-meta-4 dark:hover:text-white ${tablesOpen ? 'bg-gray dark:bg-meta-4 text-[#1C2434] dark:text-white' : ''}`}
+                  onClick={() => setTablesOpen(!tablesOpen)}
+                >
                   <div className="flex items-center gap-2.5">
                     <Table className="w-5 h-5" />
                     Tables
                   </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </a>
+                  {tablesOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                </div>
+                {/* Tables Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${tablesOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink
+                        to="/tables/basic-tables"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Basic Tables
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/tables/data-tables"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                          }`
+                        }
+                      >
+                        Data Tables
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li>
                 <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
