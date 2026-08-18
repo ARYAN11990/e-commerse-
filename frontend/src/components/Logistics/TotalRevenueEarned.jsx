@@ -1,5 +1,5 @@
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -53,9 +53,7 @@ const TotalRevenueEarned = () => {
               {data?.total_revenue}
             </h4>
           </div>
-          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <DropdownDefault options={['View Details', 'Export', 'Delete']} />
         </div>
 
         <div className="flex items-end justify-between mt-auto">

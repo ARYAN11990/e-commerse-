@@ -1,4 +1,5 @@
-import { MoreVertical, MessageSquare, Phone } from 'lucide-react';
+import { MessageSquare, Phone } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -12,9 +13,7 @@ const TrackingDelivery = () => {
           <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Tracking Delivery</h4>
           <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Last viewed delivery history</span>
         </div>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
+        <DropdownDefault options={['View Details', 'Export', 'Delete']} />
       </div>
 
       <DataState 

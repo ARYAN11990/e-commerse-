@@ -1,4 +1,5 @@
 import { Calendar, Filter, Download } from 'lucide-react';
+import { exportToCSV } from '../../utils/exportToCSV';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -29,7 +30,7 @@ const SalesHeader = () => {
           <Filter className="w-4 h-4 text-[#64748B] dark:text-[#8A99AF]" />
           Filter
         </button>
-        <button className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 text-sm font-medium text-white hover:bg-blue-600">
+        <button onClick={() => exportToCSV([{ SalesDate: '2026-08-18', Total: 1500 }], 'sales-export')} className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 text-sm font-medium text-white hover:bg-blue-600">
           <Download className="w-4 h-4" />
           Export
         </button>

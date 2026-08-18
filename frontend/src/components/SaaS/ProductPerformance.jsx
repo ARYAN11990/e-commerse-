@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
 const ProductPerformance = () => {
-  const [tab, setTab] = useState('Daily Sales');
+  const [timeframe, setTimeframe] = useState('Daily Sales');
   const { data, loading, error, fetchData } = useApi('/saas/product-performance');
 
   const options = {
@@ -50,9 +50,7 @@ const ProductPerformance = () => {
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default h-full flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Product Performance</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
+        <DropdownDefault options={['View Report', 'Download PDF', 'Settings']} onSelect={() => {}} />
       </div>
 
       <DataState 
@@ -75,9 +73,9 @@ const ProductPerformance = () => {
           {['Daily Sales', 'Online Sales', 'New Users'].map((t) => (
             <button
               key={t}
-              onClick={() => setTab(t)}
+              onClick={() => setTimeframe(t)}
               className={`flex-1 py-2 text-xs font-medium rounded-sm transition-colors text-center ${
-                tab === t ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                timeframe === t ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
               }`}
             >
               {t}

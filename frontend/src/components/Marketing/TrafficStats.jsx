@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -21,7 +21,7 @@ const SparklineChart = ({ color, data }) => {
 };
 
 const TrafficStats = () => {
-  const [period, setPeriod] = useState('Today');
+  const [timeframe, setTimeframe] = useState('Month');
   const { data, loading, error, fetchData } = useApi('/marketing/traffic-stats');
 
   const statsList = [
@@ -49,18 +49,16 @@ const TrafficStats = () => {
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default h-full flex flex-col">
       <div className="mb-6 flex justify-between items-center">
         <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Traffic Stats</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
+        <DropdownDefault options={['View Report', 'Download PDF', 'Settings']} onSelect={() => {}} />
       </div>
 
       <div className="flex bg-[#F1F5F9] dark:bg-[#1A222C] rounded-md p-1 mb-6">
         {['Today', 'Week', 'Month'].map((p) => (
           <button
             key={p}
-            onClick={() => setPeriod(p)}
+            onClick={() => setTimeframe(p)}
             className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-sm transition-colors text-center ${
-              period === p ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+              timeframe === p ? 'bg-white dark:bg-[#24303F] shadow-sm text-[#1C2434] dark:text-white' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
             }`}
           >
             {p}

@@ -129,6 +129,8 @@ const UserProfile = () => {
                 first_name: { required: 'First name is required' },
                 last_name: { required: 'Last name is required' },
                 email: { required: 'Email is required', email: 'Invalid email format' },
+                phone: { phone: 'Invalid phone format' },
+                bio: { maxLength: 200, maxLengthMessage: 'Max 200 characters' },
                 facebook: { url: 'Invalid URL format' },
                 twitter: { url: 'Invalid URL format' },
                 linkedin: { url: 'Invalid URL format' },

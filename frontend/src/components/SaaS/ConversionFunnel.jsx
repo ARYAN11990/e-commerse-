@@ -1,5 +1,5 @@
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -73,9 +73,7 @@ const ConversionFunnel = () => {
       >
         <div className="flex justify-between items-start mb-6">
           <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Conversion Funnel</h4>
-          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <DropdownDefault options={['View Report', 'Download PDF', 'Settings']} onSelect={() => {}} />
         </div>
 
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">

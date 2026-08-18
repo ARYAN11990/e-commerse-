@@ -59,10 +59,9 @@ const MyProfile = ({ data, onEdit, onAvatarUpdate }) => {
     <div className="flex flex-col gap-6 mb-6">
       {/* Profile Summary Card (Header) */}
       <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] shadow-default overflow-hidden">
-        <div className="h-32 bg-primary/10 relative">
+         <div className="h-32 bg-primary/10 relative">
           <div className="absolute right-4 top-4">
-            <button onClick={onEdit} className="flex items-center gap-2 rounded-md bg-white dark:bg-boxdark px-4 py-1.5 text-sm font-medium text-black dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] shadow-sm">
-              <Pencil className="w-4 h-4" /> Edit Profile
+            <button onClick={onEdit} className="flex items-center gap-2 rounded-md bg-white dark:bg-boxdark px-4 py-1.5 text-sm font-medium text-black dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] shadow-sm"> <Pencil className="w-4 h-4" /> Edit Profile
             </button>
           </div>
         </div>
@@ -77,6 +76,7 @@ const MyProfile = ({ data, onEdit, onAvatarUpdate }) => {
               onClick={handleImageClick}
               disabled={uploading}
               className="absolute bottom-1 right-1 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
+              aria-label="Upload profile photo"
               title="Update photo"
             >
               {uploading ? (
@@ -89,10 +89,11 @@ const MyProfile = ({ data, onEdit, onAvatarUpdate }) => {
             {data.avatar && !data.avatar.includes('ui-avatars') && (
               <button 
                 onClick={handleRemoveImage}
-                className="absolute top-1 right-1 bg-danger text-white rounded-full p-1 hover:bg-opacity-90 transition shadow-sm"
+                className="absolute top-1 right-1 flex items-center justify-center h-6 w-6 bg-danger text-white rounded-full hover:bg-opacity-90 transition shadow-sm"
+                aria-label="Remove profile photo"
                 title="Remove photo"
               >
-                <X className="w-3 h-3" />
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
             <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/jpeg, image/png, image/webp" className="hidden" />

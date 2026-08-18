@@ -1,5 +1,5 @@
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -51,9 +51,7 @@ const ChurnRate = () => {
             <h4 className="text-lg font-bold text-[#1C2434] dark:text-white">Churn Rate</h4>
             <span className="text-xs font-medium text-[#64748B] dark:text-[#8A99AF]">Downgrade to Free plan</span>
           </div>
-          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <DropdownDefault options={['View Report', 'Download PDF', 'Settings']} onSelect={() => {}} />
         </div>
 
         <div className="flex items-end justify-between">

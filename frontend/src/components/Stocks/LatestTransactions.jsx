@@ -1,5 +1,5 @@
 import { useApi } from '../../hooks/useApi';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import DataTable from '../DataTable';
 
 const LatestTransactions = () => {
@@ -65,9 +65,7 @@ const LatestTransactions = () => {
       accessor: 'action',
       className: 'text-center',
       renderCell: (row) => (
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-4 h-4 mx-auto" />
-        </button>
+        <div className="flex justify-center"><DropdownDefault options={['View Details', 'Export', 'Delete']} /></div>
       )
     }
   ];

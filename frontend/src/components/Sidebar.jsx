@@ -1,13 +1,18 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Calendar, User, Users, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Calendar, User, Users, CheckSquare, FileText, Table, File, ChevronUp, ChevronDown, PieChart, Map, Box, Plug } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-  const [dashboardOpen, setDashboardOpen] = useState(true);
-  const [ecommerceOpen, setEcommerceOpen] = useState(true);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [ecommerceOpen, setEcommerceOpen] = useState(false);
   const [taskOpen, setTaskOpen] = useState(false);
   const [formsOpen, setFormsOpen] = useState(false);
-  const [tablesOpen, setTablesOpen] = useState(true);
+  const [tablesOpen, setTablesOpen] = useState(false);
+  const [pagesOpen, setPagesOpen] = useState(false);
+  const [chartsOpen, setChartsOpen] = useState(false);
+  const [mapsOpen, setMapsOpen] = useState(false);
+  const [uiElementsOpen, setUiElementsOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -62,7 +67,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   className={`group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium cursor-pointer ${
                     dashboardOpen 
                       ? 'bg-[#F1F5F9] dark:bg-[#1A222C] text-[#3C50E0]' 
-                      : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                      : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                   }`}
                   onClick={() => setDashboardOpen(!dashboardOpen)}
                 >
@@ -82,7 +87,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive || window.location.pathname === '/' 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -96,7 +101,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -110,7 +115,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -124,7 +129,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -138,7 +143,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -152,7 +157,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -166,7 +171,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -180,7 +185,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -195,7 +200,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -210,7 +215,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex justify-between items-center rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -228,7 +233,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   className={`group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium cursor-pointer ${
                     ecommerceOpen 
                       ? 'bg-[#F1F5F9] dark:bg-[#1A222C] text-[#3C50E0]' 
-                      : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                      : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                   }`}
                   onClick={() => setEcommerceOpen(!ecommerceOpen)}
                 >
@@ -258,7 +263,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                               isActive 
                                 ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                                : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                             }`
                           }
                         >
@@ -272,7 +277,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <NavLink to="/users" className={({ isActive }) =>
                   `group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium ${
-                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                   }`
                 }>
                   <Users className="w-5 h-5" />
@@ -282,7 +287,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <NavLink to="/calendar" className={({ isActive }) =>
                   `group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium ${
-                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                    isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                   }`
                 }>
                   <Calendar className="w-5 h-5" />
@@ -290,7 +295,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/profile" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
+                <NavLink to="/profile" className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white">
                   <User className="w-5 h-5" />
                   User Profile
                 </NavLink>
@@ -316,7 +321,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -330,7 +335,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -361,7 +366,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -375,7 +380,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -406,7 +411,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -420,7 +425,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
                             isActive 
                               ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
-                              : 'text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white'
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
                           }`
                         }
                       >
@@ -431,13 +436,273 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </li>
               <li>
-                <a href="#" className="group relative flex items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-                  <div className="flex items-center gap-2.5">
-                    <File className="w-5 h-5" />
-                    Pages
+                  <div 
+                    className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray hover:text-[#1C2434] dark:hover:bg-meta-4 dark:hover:text-white ${pagesOpen ? 'bg-gray dark:bg-meta-4 text-[#1C2434] dark:text-white' : ''}`}
+                    onClick={() => setPagesOpen(!pagesOpen)}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <File className="w-5 h-5" />
+                      Pages
+                    </div>
+                    {pagesOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
                   </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </a>
+                  {/* Pages Dropdown */}
+                  <div className={`mt-2 pl-9 pr-4 ${pagesOpen ? 'block' : 'hidden'}`}>
+                    <ul className="flex flex-col gap-1.5">
+                      <li>
+                        <NavLink
+                          to="/pages/file-manager"
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                            }`
+                          }
+                        >
+                          File Manager
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/pages/pricing-tables"
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                            }`
+                          }
+                        >
+                          Pricing Tables
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/pages/faq"
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                            }`
+                          }
+                        >
+                          FAQ
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/pages/api-keys"
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                            }`
+                          }
+                        >
+                          API Keys
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/pages/integrations"
+                          className={({ isActive }) =>
+                            `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                              isActive 
+                                ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                                : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                            }`
+                          }
+                        >
+                          Integrations
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+            </ul>
+          </div>
+          
+          {/* OTHERS GROUP */}
+          <div>
+            <h3 className="mb-4 ml-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">OTHERS</h3>
+            <ul className="mb-6 flex flex-col gap-1.5">
+              <li>
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray hover:text-[#1C2434] dark:hover:bg-meta-4 dark:hover:text-white ${chartsOpen ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : ''}`}
+                  onClick={() => setChartsOpen(!chartsOpen)}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <PieChart className="w-5 h-5" />
+                    Charts
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-[#219653]/10 px-2 py-0.5 text-xs font-medium text-[#219653] dark:text-white dark:bg-meta-4">NEW</span>
+                    {chartsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                  </div>
+                </div>
+                {/* Charts Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${chartsOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink
+                        to="/charts/line-chart"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                          }`
+                        }
+                      >
+                        Line Chart
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/charts/bar-chart"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                          }`
+                        }
+                      >
+                        Bar Chart
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/charts/pie-chart"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                          }`
+                        }
+                      >
+                        Pie Chart
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/charts/radar-chart"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                          }`
+                        }
+                      >
+                        Radar Chart
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/charts/radial-chart"
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${
+                            isActive 
+                              ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' 
+                              : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'
+                          }`
+                        }
+                      >
+                        Radial Chart
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              {/* Maps Menu */}
+              <li>
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white ${mapsOpen ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : ''}`}
+                  onClick={() => setMapsOpen(!mapsOpen)}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Map className="w-5 h-5" />
+                    Maps
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-[#219653]/10 px-2 py-0.5 text-xs font-medium text-[#219653]">NEW</span>
+                    {mapsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                  </div>
+                </div>
+                {/* Maps Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${mapsOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink to="/maps/google-maps" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Google Maps</NavLink>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              {/* UI Elements Menu */}
+              <li>
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white ${uiElementsOpen ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : ''}`}
+                  onClick={() => setUiElementsOpen(!uiElementsOpen)}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Box className="w-5 h-5" />
+                    UI Elements
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {uiElementsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                  </div>
+                </div>
+                {/* UI Elements Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${uiElementsOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink to="/ui/alerts" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Alerts</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/ui/buttons" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Buttons</NavLink>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              {/* Authentication Menu */}
+              <li>
+                <div 
+                  className={`group relative flex cursor-pointer items-center justify-between gap-2.5 rounded-sm py-2 px-4 font-medium text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white ${authOpen ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : ''}`}
+                  onClick={() => setAuthOpen(!authOpen)}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Plug className="w-5 h-5" />
+                    Authentication
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {authOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 opacity-50" />}
+                  </div>
+                </div>
+                {/* Authentication Dropdown */}
+                <div className={`mt-2 pl-9 pr-4 ${authOpen ? 'block' : 'hidden'}`}>
+                  <ul className="flex flex-col gap-1.5">
+                    <li>
+                      <NavLink to="/login" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Sign In</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/register" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Sign Up</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/reset-password" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Reset Password</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/verify-email" className={({ isActive }) => `flex items-center gap-2.5 rounded-md py-2 px-4 text-sm font-medium ${isActive ? 'bg-[#EDF2F9] dark:bg-[#333A48] text-[#3C50E0]' : 'text-[#64748B] dark:text-[#8A99AF] hover:bg-gray dark:hover:bg-meta-4 hover:text-[#1C2434] dark:hover:text-white'}`}>Two Step Verification</NavLink>
+                    </li>
+                  </ul>
+                </div>
               </li>
             </ul>
           </div>

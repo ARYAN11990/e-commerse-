@@ -102,10 +102,10 @@ const TrendingStocks = () => {
                 </div>
                 
                 <div className="flex gap-3">
-                  <button className="flex-1 rounded-md border border-stroke dark:border-[#2E3A47] py-2.5 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] transition">
+                  <button onClick={() => alert('Action initiated')} className="flex-1 rounded-md border border-stroke dark:border-[#2E3A47] py-2.5 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] transition">
                     Short Stock
                   </button>
-                  <button className="flex-1 rounded-md bg-[#3C50E0] py-2.5 text-sm font-medium text-white hover:bg-blue-600 transition">
+                  <button onClick={() => alert('Action initiated')} className="flex-1 rounded-md bg-[#3C50E0] py-2.5 text-sm font-medium text-white hover:bg-blue-600 transition">
                     Buy Stock
                   </button>
                 </div>

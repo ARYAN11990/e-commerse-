@@ -47,6 +47,18 @@ export const Form = ({
       return rules.minLengthMessage || `Must be at least ${rules.minLength} characters`;
     }
     
+    if (rules.maxLength && value && value.length > rules.maxLength) {
+      return rules.maxLengthMessage || `Must be no more than ${rules.maxLength} characters`;
+    }
+    
+    if (rules.url && value && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
+      return typeof rules.url === 'string' ? rules.url : 'Invalid URL format';
+    }
+
+    if (rules.phone && value && !/^\+?[0-9\s\-\(\)]+$/.test(value)) {
+      return typeof rules.phone === 'string' ? rules.phone : 'Invalid phone number';
+    }
+    
     if (rules.match && currentValues) {
       if (value !== currentValues[rules.match]) {
         return rules.matchMessage || 'Fields do not match';

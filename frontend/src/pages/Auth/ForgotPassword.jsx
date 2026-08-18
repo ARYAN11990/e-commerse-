@@ -1,78 +1,69 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Input } from '../../components/Form';
+import AuthLayout from '../../components/AuthLayout';
+import { useToast } from '../../context/ToastContext';
 
 const ForgotPassword = () => {
-  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showToast } = useToast();
 
-  const validationRules = {
-    email: {
-      required: 'Email is required',
-      email: 'Please enter a valid email address',
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      showToast('Please enter your email', 'error');
+      return;
     }
-  };
-
-  const handleSubmit = async (values, { setApiError }) => {
+    
+    setIsSubmitting(true);
     // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setSubmitted(true);
-        resolve();
-      }, 1000);
-    });
+    setTimeout(() => {
+      showToast('Password reset link sent to your email', 'success');
+      setIsSubmitting(false);
+    }, 1000);
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white dark:bg-[#1A222C]">
-      <div className="w-full max-w-md rounded-lg border border-stroke bg-white p-8 shadow-default dark:border-[#2E3A47] dark:bg-[#24303F]">
-        <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-          Forgot Password
-        </h2>
-        {submitted ? (
-          <div className="text-center">
-            <p className="mb-4 text-[#10B981]">Password reset link sent to your email.</p>
-            <Link to="/login" className="text-primary hover:underline">Return to Sign In</Link>
-          </div>
-        ) : (
-          <Form 
-            initialValues={{ email: '' }} 
-            validationRules={validationRules} 
-            onSubmit={handleSubmit}
-          >
-            <Input 
-              name="email" 
-              label="Email Address" 
-              type="email"
-              placeholder="Enter your email" 
-              containerClassName="mb-5"
-            />
-            
-            <div className="mb-5">
-              <SubmitButton text="Send Reset Link" loadingText="Sending..." />
-            </div>
-            <div className="mt-6 text-center">
-              <Link to="/login" className="text-primary hover:underline">
-                Back to Sign In
-              </Link>
-            </div>
-          </Form>
-        )}
+    <AuthLayout>
+      <div className="mb-10">
+        <h2 className="text-3xl font-bold text-[#1C2434] dark:text-white mb-2">Forgot Your Password?</h2>
+        <p className="text-[#64748B] dark:text-[#8A99AF] font-medium leading-relaxed">
+          Enter the email address linked to your account, and we'll send you a link to reset your password.
+        </p>
       </div>
-    </div>
-  );
-};
 
-import { useFormContext } from '../../components/Form';
-const SubmitButton = ({ text, loadingText }) => {
-  const { isSubmitting } = useFormContext();
-  return (
-    <button
-      type="submit"
-      disabled={isSubmitting}
-      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:opacity-50"
-    >
-      {isSubmitting ? loadingText : text}
-    </button>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-6">
+          <label className="mb-2.5 block font-medium text-[#1C2434] dark:text-white">
+            Email<span className="text-[#DC3545]">*</span>
+          </label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-lg border border-stroke bg-transparent py-3 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full cursor-pointer rounded-lg border border-[#3C50E0] bg-[#3C50E0] py-3 px-4 text-white font-medium transition hover:bg-opacity-90 disabled:opacity-50"
+        >
+          {isSubmitting ? "Sending..." : "Send Reset Link"}
+        </button>
+
+        <div className="mt-6 text-center">
+          <p className="font-medium text-[#64748B] dark:text-[#8A99AF]">
+            Wait, I remember my password...{' '}
+            <Link to="/login" className="text-[#3C50E0] hover:underline">
+              Click here
+            </Link>
+          </p>
+        </div>
+      </form>
+    </AuthLayout>
   );
 };
 

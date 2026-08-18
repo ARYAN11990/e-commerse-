@@ -3,6 +3,8 @@ import { Pencil, Smartphone, Shield, LogOut, Check, X } from 'lucide-react';
 import { api } from '../../services/api';
 import { Form, Input, Toggle, useFormContext } from '../Form';
 import { useToast } from '../../context/ToastContext';
+import ConfirmationModal from '../Modal/ConfirmationModal';
+import { Copy } from 'lucide-react';
 
 const PasswordStrength = ({ password }) => {
   const [strength, setStrength] = useState(0);
@@ -102,12 +104,13 @@ const Security = ({ data, sessions = [], onUpdate2FA, onUpdateSessions }) => {
     setTimeout(() => setPasswordModalOpen(false), 1500);
   };
 
+  const [disable2FAModalOpen, setDisable2FAModalOpen] = useState(false);
+  const [recoveryCodes, setRecoveryCodes] = useState(null);
+
   const handleToggle2FAClick = () => {
     if (data.two_factor_enabled) {
-      // Direct disable
-      disable2FA();
+      setDisable2FAModalOpen(true);
     } else {
-      // Open setup modal
       setTwoFactorModalOpen(true);
       setOtp('');
       setOtpError('');
@@ -120,6 +123,7 @@ const Security = ({ data, sessions = [], onUpdate2FA, onUpdateSessions }) => {
       const resData = await api.put('/profile/security', { two_factor_enabled: false });
       onUpdate2FA(resData.security);
       showToast("Two-factor authentication disabled", "success");
+      setDisable2FAModalOpen(false);
     } catch (err) {
       showToast(err.message || "Failed to disable 2FA", "error");
     } finally {
@@ -137,10 +141,26 @@ const Security = ({ data, sessions = [], onUpdate2FA, onUpdateSessions }) => {
     try {
       const resData = await api.put('/profile/security', { two_factor_enabled: true });
       onUpdate2FA(resData.security);
+      if (resData.recovery_codes) {
+        setRecoveryCodes(resData.recovery_codes);
+      }
       showToast("Two-factor authentication enabled successfully", "success");
       setTwoFactorModalOpen(false);
     } catch (err) {
       setOtpError(err.message || "Invalid OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogoutOtherSessions = async () => {
+    setLoading(true);
+    try {
+      const res = await api.post('/profile/logout-all', {});
+      onUpdateSessions(res.sessions);
+      showToast("Logged out of all other sessions", "success");
+    } catch (err) {
+      showToast(err.message || "Failed to logout other sessions", "error");
     } finally {
       setLoading(false);
     }
@@ -207,7 +227,18 @@ const Security = ({ data, sessions = [], onUpdate2FA, onUpdateSessions }) => {
       </div>
 
       <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] p-6 shadow-default">
-        <h3 className="font-medium text-[#1C2434] dark:text-white text-lg mb-6">Active Sessions</h3>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+          <h3 className="font-medium text-[#1C2434] dark:text-white text-lg">Active Sessions</h3>
+          {sessions.length > 1 && (
+            <button 
+              onClick={handleLogoutOtherSessions}
+              disabled={loading}
+              className="text-sm font-medium text-danger hover:underline flex items-center gap-1 disabled:opacity-50"
+            >
+              <LogOut className="w-4 h-4" /> Logout all other sessions
+            </button>
+          )}
+        </div>
         
         <div className="flex flex-col gap-4">
           {sessions.map((session) => (
@@ -299,6 +330,51 @@ const Security = ({ data, sessions = [], onUpdate2FA, onUpdateSessions }) => {
               <button onClick={() => setTwoFactorModalOpen(false)} className="rounded border border-stroke dark:border-[#2E3A47] px-6 py-2 font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]">Cancel</button>
               <button onClick={enable2FA} disabled={loading} className="rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90 disabled:opacity-50">
                 {loading ? 'Verifying...' : 'Verify & Enable'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+      {/* Disable 2FA Confirmation Modal */}
+      <ConfirmationModal 
+        isOpen={disable2FAModalOpen}
+        onClose={() => setDisable2FAModalOpen(false)}
+        onConfirm={disable2FA}
+        title="Disable Two-Factor Authentication?"
+        description="Are you sure you want to disable 2FA? This will make your account less secure and remove the requirement for a verification code when signing in."
+        confirmText="Disable 2FA"
+        confirmStyle="danger"
+        loading={loading}
+      />
+
+      {/* Recovery Codes Modal */}
+      {recoveryCodes && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setRecoveryCodes(null)}></div>
+          <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-lg bg-white dark:bg-[#24303F] shadow-lg p-6">
+            <h3 className="text-xl font-bold text-[#1C2434] dark:text-white mb-2">Save Recovery Codes</h3>
+            <p className="text-sm text-warning bg-warning/10 p-3 rounded-md mb-6 leading-relaxed">
+              <strong>Important:</strong> Copy these codes and store them in a secure place. This is the only time they will be shown. You can use them to sign in if you lose access to your authenticator app.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-3 mb-6 bg-gray dark:bg-meta-4 p-4 rounded-lg font-mono text-sm text-center">
+              {recoveryCodes.map((code, idx) => (
+                <div key={idx} className="bg-white dark:bg-[#24303F] py-2 rounded text-[#1C2434] dark:text-white tracking-widest">{code}</div>
+              ))}
+            </div>
+
+            <div className="flex justify-between gap-4">
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(recoveryCodes.join('\n'));
+                  showToast("Recovery codes copied to clipboard", "success");
+                }} 
+                className="flex items-center gap-2 rounded border border-stroke dark:border-[#2E3A47] px-4 py-2 font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A]"
+              >
+                <Copy className="w-4 h-4" /> Copy All
+              </button>
+              <button onClick={() => setRecoveryCodes(null)} className="rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90">
+                I've Saved Them
               </button>
             </div>
           </div>

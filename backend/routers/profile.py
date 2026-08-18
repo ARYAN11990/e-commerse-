@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Optional
 import uuid
+import random
+import string
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
@@ -91,9 +93,22 @@ def update_address(data: AddressUpdate):
 
 @router.put("/security")
 def update_security(data: dict):
+    response = {"status": "success"}
     if "two_factor_enabled" in data:
         db_security["two_factor_enabled"] = data["two_factor_enabled"]
-    return {"status": "success", "security": db_security}
+        if data["two_factor_enabled"]:
+            # Generate 8 random recovery codes
+            codes = []
+            for _ in range(8):
+                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+                codes.append(f"{code[:5]}-{code[5:]}")
+            db_security["recovery_codes"] = codes
+            response["recovery_codes"] = codes
+        else:
+            db_security.pop("recovery_codes", None)
+            
+    response["security"] = db_security
+    return response
 
 @router.put("/password")
 def update_password(data: PasswordUpdate):

@@ -37,6 +37,11 @@ const FormLayout = lazy(() => import('./pages/Forms/FormLayout'));
 
 const BasicTables = lazy(() => import('./pages/Tables/BasicTables'));
 const DataTables = lazy(() => import('./pages/Tables/DataTables'));
+const FileManager = lazy(() => import('./pages/Pages/FileManager'));
+const PricingTables = lazy(() => import('./pages/Pages/PricingTables'));
+const Faq = lazy(() => import('./pages/Pages/Faq'));
+const Integrations = lazy(() => import('./pages/Pages/Integrations'));
+const ApiKeys = lazy(() => import('./pages/Pages/ApiKeys'));
 
 // Ecommerce Sub-pages
 const Products = lazy(() => import('./pages/Ecommerce/Products'));
@@ -46,6 +51,14 @@ const Invoices = lazy(() => import('./pages/Ecommerce/Invoices'));
 const SingleInvoice = lazy(() => import('./pages/Ecommerce/SingleInvoice'));
 const CreateInvoice = lazy(() => import('./pages/Ecommerce/CreateInvoice'));
 const Transactions = lazy(() => import('./pages/Ecommerce/Transactions'));
+
+// Charts Routes
+const LineChart = lazy(() => import('./pages/Charts/LineChart'));
+const BarChart = lazy(() => import('./pages/Charts/BarChart'));
+const PieChart = lazy(() => import('./pages/Charts/PieChart'));
+const RadarChart = lazy(() => import('./pages/Charts/RadarChart'));
+const RadialChart = lazy(() => import('./pages/Charts/RadialChart'));
+
 const SingleTransaction = lazy(() => import('./pages/Ecommerce/SingleTransaction'));
 
 function App() {
@@ -78,11 +91,11 @@ function App() {
               <ErrorBoundary>
                 <Routes>
                   {/* Public Auth Routes */}
-                  <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                  <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-                  <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-                  <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
-                  <Route path="/verify-email" element={<PublicRoute><VerifyEmail /></PublicRoute>} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
 
                   {/* Protected Dashboard Routes */}
                   <Route path="/" element={<ProtectedRoute><ECommerce /></ProtectedRoute>} />
@@ -113,6 +126,13 @@ function App() {
                   <Route path="/tables/basic-tables" element={<ProtectedRoute><BasicTables /></ProtectedRoute>} />
                   <Route path="/tables/data-tables" element={<ProtectedRoute><DataTables /></ProtectedRoute>} />
 
+                  {/* Pages Routes */}
+                  <Route path="/pages/file-manager" element={<ProtectedRoute><FileManager /></ProtectedRoute>} />
+                  <Route path="/pages/pricing-tables" element={<ProtectedRoute><PricingTables /></ProtectedRoute>} />
+                  <Route path="/pages/faq" element={<ProtectedRoute><Faq /></ProtectedRoute>} />
+                  <Route path="/pages/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+                  <Route path="/pages/api-keys" element={<ProtectedRoute><ApiKeys /></ProtectedRoute>} />
+
                   {/* Ecommerce Sub-pages Routes */}
                   <Route path="/ecommerce/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
                   <Route path="/ecommerce/add-product" element={<ProtectedRoute><AddProduct /></ProtectedRoute>} />
@@ -122,6 +142,14 @@ function App() {
                   <Route path="/ecommerce/create-invoice" element={<ProtectedRoute><CreateInvoice /></ProtectedRoute>} />
                   <Route path="/ecommerce/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
                   <Route path="/ecommerce/single-transaction" element={<ProtectedRoute><SingleTransaction /></ProtectedRoute>} />
+
+                  {/* Charts Routes */}
+                  <Route path="/charts/line-chart" element={<ProtectedRoute><LineChart /></ProtectedRoute>} />
+                  <Route path="/charts/bar-chart" element={<ProtectedRoute><BarChart /></ProtectedRoute>} />
+                  <Route path="/charts/pie-chart" element={<ProtectedRoute><PieChart /></ProtectedRoute>} />
+                  <Route path="/charts/radar-chart" element={<ProtectedRoute><RadarChart /></ProtectedRoute>} />
+                  <Route path="/charts/radial-chart" element={<ProtectedRoute><RadialChart /></ProtectedRoute>} />
+
                 </Routes>
               </ErrorBoundary>
             </Suspense>

@@ -1,5 +1,5 @@
 import ReactApexChart from 'react-apexcharts';
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -61,9 +61,7 @@ const Dividend = () => {
       >
         <div className="mb-4 flex justify-between items-center">
           <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Dividend</h4>
-          <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <DropdownDefault options={['View Details', 'Export', 'Delete']} />
         </div>
         
         <div id="dividendChart" className="-ml-5">

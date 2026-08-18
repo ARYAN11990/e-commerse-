@@ -1,4 +1,4 @@
-import { MoreVertical } from 'lucide-react';
+import DropdownDefault from '../DropdownDefault';
 import { useApi } from '../../hooks/useApi';
 import DataState from '../DataState';
 
@@ -19,9 +19,7 @@ const TopTrafficSource = () => {
     <div className="rounded-xl border border-stroke dark:border-[#2E3A47] bg-white dark:bg-[#24303F] px-5 pt-6 pb-5 shadow-default sm:px-7.5 h-full flex flex-col">
       <div className="mb-6 flex justify-between items-center">
         <h4 className="text-xl font-bold text-[#1C2434] dark:text-white">Top Traffic Source</h4>
-        <button className="text-gray-400 hover:text-[#1C2434] dark:hover:text-white dark:text-white">
-          <MoreVertical className="w-5 h-5" />
-        </button>
+        <DropdownDefault options={['View Report', 'Download PDF', 'Settings']} onSelect={() => {}} />
       </div>
 
       <DataState 
