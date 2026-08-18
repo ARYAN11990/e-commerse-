@@ -15,6 +15,7 @@ env_origins = [origin.strip() for origin in allowed_origins_str.split(",") if or
 # Combine explicit defaults with any origins from the environment variable
 allowed_origins = list(set([
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
     "https://tailadmin1.vercel.app"
 ] + env_origins))
 

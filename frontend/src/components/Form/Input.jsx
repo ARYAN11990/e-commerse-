@@ -11,14 +11,36 @@ export const Input = ({
   disabled = false,
   className = "",
   containerClassName = "mb-4",
+  ...props
 }) => {
-  const { values, errors, touched, handleChange, handleBlur, isSubmitting } = useFormContext();
+  const context = useFormContext();
   const [showPassword, setShowPassword] = useState(false);
 
-  const value = values[name] !== undefined ? values[name] : '';
-  const error = touched[name] && errors[name];
-  const inputType = type === 'password' && showPassword ? 'text' : type;
+  // Fallback to props if context is not available
+  const inputValue = context && context.values[name] !== undefined ? context.values[name] : (props.value !== undefined ? props.value : '');
+  const inputError = context ? (context.touched[name] && context.errors[name]) : props.error;
+  const isSubmitting = context ? context.isSubmitting : false;
   const isDisabled = disabled || isSubmitting;
+
+  const handleInputChange = (e) => {
+    if (context) {
+      context.handleChange(name, e.target.value);
+    }
+    if (props.onChange) {
+      props.onChange(e);
+    }
+  };
+
+  const handleInputBlur = (e) => {
+    if (context) {
+      context.handleBlur(name);
+    }
+    if (props.onBlur) {
+      props.onBlur(e);
+    }
+  };
+
+  const inputType = type === 'password' && showPassword ? 'text' : type;
 
   return (
     <div className={containerClassName}>
@@ -29,14 +51,14 @@ export const Input = ({
           type={inputType}
           name={name}
           placeholder={placeholder}
-          value={value}
-          onChange={(e) => handleChange(name, e.target.value)}
-          onBlur={() => handleBlur(name)}
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
           disabled={isDisabled}
           className={`w-full rounded-lg border bg-transparent py-4 pl-6 ${
             (Icon || type === 'password') ? 'pr-12' : 'pr-6'
           } outline-none focus-visible:shadow-none dark:bg-[#1A222C] transition ${
-            error 
+            inputError 
               ? 'border-[#DC3545] focus:border-[#DC3545]' 
               : 'border-stroke focus:border-primary dark:border-[#2E3A47] dark:focus:border-primary'
           } ${isDisabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
@@ -59,7 +81,7 @@ export const Input = ({
           </button>
         )}
       </div>
-      {error && <p className="mt-1.5 text-sm text-[#DC3545]">{error}</p>}
+      {inputError && <p className="mt-1.5 text-sm text-[#DC3545]">{inputError}</p>}
     </div>
   );
 };

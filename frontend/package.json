@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "concurrently -n \"FRONTEND,BACKEND\" -c \"cyan,magenta\" \"vite\" \"cd ../backend && ..\\venv\\Scripts\\python.exe -m uvicorn main:app\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -23,6 +24,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
+    "concurrently": "^10.0.5",
     "oxlint": "^1.75.0",
     "vite": "^8.2.0"
   }

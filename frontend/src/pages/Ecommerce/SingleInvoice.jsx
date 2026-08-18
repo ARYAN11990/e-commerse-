@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const SingleInvoice = () => {
   return (
@@ -11,110 +11,134 @@ const SingleInvoice = () => {
         <nav>
           <ol className="flex items-center gap-2 text-sm">
             <li><a className="font-medium hover:text-[#3C50E0]" href="/">Home /</a></li>
-            <li><a className="font-medium hover:text-[#3C50E0]" href="/ecommerce/invoices">Invoices /</a></li>
-            <li className="font-medium text-[#3C50E0]">INV-2027-001</li>
+            <li className="font-medium text-[#3C50E0]">Invoice</li>
           </ol>
         </nav>
       </div>
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="flex flex-col-reverse gap-5 p-6.5 border-b border-stroke dark:border-strokedark sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1">
-            <h4 className="text-2xl font-bold text-black dark:text-white">TAILADMIN</h4>
-            <p className="text-sm font-medium">tailadmin.com</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 rounded-md border border-stroke dark:border-[#2E3A47] px-4 py-2 text-sm font-medium text-[#1C2434] dark:text-white hover:bg-gray-50 dark:hover:bg-[#313D4A] transition">
-              <Printer className="w-4 h-4" />
-              Print
-            </button>
-            <button className="flex items-center gap-2 rounded-md bg-[#3C50E0] px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 transition">
-              <Download className="w-4 h-4" />
-              Download
-            </button>
-          </div>
+        {/* Card Header */}
+        <div className="flex flex-col gap-5 p-6.5 border-b border-stroke dark:border-strokedark sm:flex-row sm:items-center sm:justify-between">
+          <h3 className="font-medium text-black dark:text-white">Invoice</h3>
+          <span className="font-medium text-black dark:text-white">ID: #348</span>
         </div>
 
         <div className="p-6.5">
+          {/* Invoice Header Details */}
           <div className="flex flex-wrap justify-between gap-5 pb-8 border-b border-stroke dark:border-strokedark">
-            <div className="w-full sm:w-1/2 lg:w-1/3">
-              <span className="block mb-1.5 font-medium text-black dark:text-white">Billed To:</span>
-              <h5 className="mb-1 text-lg font-bold text-black dark:text-white">Acme Corp</h5>
-              <p className="text-sm text-[#64748B] dark:text-[#8A99AF]">123 Business Avenue<br/>New York, NY 10001<br/>United States</p>
+            {/* From */}
+            <div className="w-full sm:w-1/2 lg:w-5/12">
+              <span className="block mb-1.5 font-medium text-black dark:text-white">From</span>
+              <h5 className="mb-1 text-lg font-bold text-black dark:text-white">Pimjo LLC</h5>
+              <p className="text-sm text-[#64748B] dark:text-[#8A99AF] leading-relaxed">
+                1280, Clair Street,<br />Massachusetts, New York - 02543
+              </p>
+              
+              <div className="mt-6">
+                <span className="block mb-1 font-medium text-black dark:text-white">Issued On:</span>
+                <span className="text-sm text-[#64748B] dark:text-[#8A99AF]">11 March, 2027</span>
+              </div>
             </div>
             
-            <div className="w-full sm:w-1/2 lg:w-1/3">
-              <span className="block mb-1.5 font-medium text-black dark:text-white">Shipped To:</span>
-              <h5 className="mb-1 text-lg font-bold text-black dark:text-white">Acme Corp Warehouse</h5>
-              <p className="text-sm text-[#64748B] dark:text-[#8A99AF]">456 Logistics Blvd<br/>Newark, NJ 07101<br/>United States</p>
-            </div>
-
-            <div className="w-full sm:w-1/2 lg:w-1/3">
-              <div className="flex justify-between mb-2">
-                <span className="font-medium text-black dark:text-white">Invoice ID:</span>
-                <span className="text-sm text-[#64748B] dark:text-[#8A99AF]">INV-2027-001</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="font-medium text-black dark:text-white">Issue Date:</span>
-                <span className="text-sm text-[#64748B] dark:text-[#8A99AF]">15 Dec, 2027</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium text-black dark:text-white">Due Date:</span>
-                <span className="text-sm text-[#64748B] dark:text-[#8A99AF]">15 Jan, 2028</span>
+            {/* Divider (Hidden on small screens) */}
+            <div className="hidden sm:block w-px bg-stroke dark:bg-strokedark"></div>
+            
+            {/* To */}
+            <div className="w-full sm:w-1/2 lg:w-5/12 text-left sm:text-right">
+              <span className="block mb-1.5 font-medium text-black dark:text-white">To</span>
+              <h5 className="mb-1 text-lg font-bold text-black dark:text-white">Albert Ward</h5>
+              <p className="text-sm text-[#64748B] dark:text-[#8A99AF] leading-relaxed">
+                355, Shobe Lane<br />Colorado, Fort Collins - 80543
+              </p>
+              
+              <div className="mt-6">
+                <span className="block mb-1 font-medium text-black dark:text-white">Due On:</span>
+                <span className="text-sm text-[#64748B] dark:text-[#8A99AF]">16 March, 2027</span>
               </div>
             </div>
           </div>
 
+          {/* Table */}
           <div className="mt-8">
             <div className="max-w-full overflow-x-auto">
               <table className="w-full table-auto border-collapse">
                 <thead>
                   <tr className="bg-[#F8FAFC] dark:bg-[#313D4A] text-left">
-                    <th className="px-4 py-3 font-medium text-black dark:text-white rounded-l-md">Description</th>
-                    <th className="px-4 py-3 font-medium text-black dark:text-white text-center">Qty</th>
-                    <th className="px-4 py-3 font-medium text-black dark:text-white text-right">Unit Price</th>
-                    <th className="px-4 py-3 font-medium text-black dark:text-white text-right rounded-r-md">Total</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white rounded-l-md">S.No.#</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white">Products</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white text-center">Quantity</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white text-center">Unit Cost</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white text-center">Discount</th>
+                    <th className="px-4 py-4 font-medium text-black dark:text-white text-right rounded-r-md">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b border-stroke dark:border-strokedark">
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white">TailAdmin Pro License (Annual)</td>
-                    <td className="px-4 py-4 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">1</td>
-                    <td className="px-4 py-4 text-sm text-right text-[#64748B] dark:text-[#8A99AF]">$599.00</td>
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white text-right">$599.00</td>
+                    <td className="px-4 py-5 text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">1</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white">Macbook pro 13"</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">1</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">$48</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">0%</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white text-right">$1,200</td>
                   </tr>
                   <tr className="border-b border-stroke dark:border-strokedark">
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white">Custom Development Hours</td>
-                    <td className="px-4 py-4 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">10</td>
-                    <td className="px-4 py-4 text-sm text-right text-[#64748B] dark:text-[#8A99AF]">$75.00</td>
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white text-right">$750.00</td>
+                    <td className="px-4 py-5 text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">2</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white">Apple Watch Ultra</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">1</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">$300</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">50%</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white text-right">$150</td>
                   </tr>
                   <tr className="border-b border-stroke dark:border-strokedark">
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white">Premium Support Package</td>
-                    <td className="px-4 py-4 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">1</td>
-                    <td className="px-4 py-4 text-sm text-right text-[#64748B] dark:text-[#8A99AF]">$101.00</td>
-                    <td className="px-4 py-4 text-sm font-medium text-black dark:text-white text-right">$101.00</td>
+                    <td className="px-4 py-5 text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">3</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white">iPhone 15 Pro Max</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">3</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">$800</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">0%</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white text-right">$1,600</td>
+                  </tr>
+                  <tr className="border-b border-stroke dark:border-strokedark">
+                    <td className="px-4 py-5 text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">4</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white">iPad Pro 3rd Gen</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">1</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">$900</td>
+                    <td className="px-4 py-5 text-sm text-center text-[#64748B] dark:text-[#8A99AF]">0%</td>
+                    <td className="px-4 py-5 text-sm font-medium text-black dark:text-white text-right">$900</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <div className="flex justify-end mt-8">
+            {/* Order Summary */}
+            <div className="flex justify-end mt-8 pb-8 border-b border-stroke dark:border-strokedark">
               <div className="w-full sm:w-1/2 lg:w-1/3">
-                <div className="flex justify-between py-3 border-b border-stroke dark:border-strokedark">
-                  <span className="font-medium text-black dark:text-white">Subtotal</span>
-                  <span className="font-medium text-black dark:text-white">$1,450.00</span>
+                <h4 className="mb-4 font-bold text-black dark:text-white">Order summary</h4>
+                <div className="flex justify-between py-2">
+                  <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Sub Total</span>
+                  <span className="text-sm font-bold text-black dark:text-white">$3,850</span>
                 </div>
-                <div className="flex justify-between py-3 border-b border-stroke dark:border-strokedark">
-                  <span className="font-medium text-black dark:text-white">Tax (10%)</span>
-                  <span className="font-medium text-black dark:text-white">$145.00</span>
+                <div className="flex justify-between py-2">
+                  <span className="text-sm font-medium text-[#64748B] dark:text-[#8A99AF]">Vat (10%):</span>
+                  <span className="text-sm font-bold text-black dark:text-white">$385</span>
                 </div>
-                <div className="flex justify-between py-3">
-                  <span className="text-lg font-bold text-[#3C50E0]">Total</span>
-                  <span className="text-lg font-bold text-[#3C50E0]">$1,595.00</span>
+                <div className="flex justify-between py-4 mt-2 border-t border-stroke dark:border-strokedark">
+                  <span className="font-bold text-black dark:text-white">Total</span>
+                  <span className="font-bold text-black dark:text-white">$4,235</span>
                 </div>
               </div>
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4.5 mt-8">
+              <button onClick={() => window.alert('Proceeding to secure payment gateway...')} className="flex justify-center rounded border border-stroke py-2.5 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white transition">
+                Proceed to payment
+              </button>
+              <button onClick={() => window.print()} className="flex items-center justify-center gap-2 rounded bg-primary py-2.5 px-6 font-medium text-white hover:bg-opacity-90 transition">
+                <Printer className="w-5 h-5" />
+                Print
+              </button>
+            </div>
+
           </div>
         </div>
       </div>

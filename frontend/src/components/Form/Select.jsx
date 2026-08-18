@@ -11,19 +11,38 @@ export const Select = ({
   disabled = false,
   className = "",
   containerClassName = "mb-4",
+  ...props
 }) => {
-  const { values, errors, touched, handleChange, handleBlur, isSubmitting } = useFormContext();
+  const context = useFormContext();
 
-  const value = values[name] !== undefined ? values[name] : (multiple ? [] : '');
-  const error = touched[name] && errors[name];
+  const inputValue = context && context.values[name] !== undefined ? context.values[name] : (props.value !== undefined ? props.value : (multiple ? [] : ''));
+  const inputError = context ? (context.touched[name] && context.errors[name]) : props.error;
+  const isSubmitting = context ? context.isSubmitting : false;
   const isDisabled = disabled || isSubmitting;
 
   const handleSelectChange = (e) => {
+    let newValue;
     if (multiple) {
-      const selectedOptions = Array.from(e.target.selectedOptions).map(opt => opt.value);
-      handleChange(name, selectedOptions);
+      newValue = Array.from(e.target.selectedOptions).map(opt => opt.value);
     } else {
-      handleChange(name, e.target.value);
+      newValue = e.target.value;
+    }
+    
+    if (context) {
+      context.handleChange(name, newValue);
+    }
+    if (props.onChange) {
+      // Allow custom onChange to get either event or value directly depending on their implementation
+      props.onChange(newValue, e);
+    }
+  };
+
+  const handleSelectBlur = (e) => {
+    if (context) {
+      context.handleBlur(name);
+    }
+    if (props.onBlur) {
+      props.onBlur(e);
     }
   };
 
@@ -33,13 +52,13 @@ export const Select = ({
       <div className="relative z-20 bg-transparent dark:bg-[#1A222C]">
         <select
           name={name}
-          value={value}
+          value={inputValue}
           multiple={multiple}
           onChange={handleSelectChange}
-          onBlur={() => handleBlur(name)}
+          onBlur={handleSelectBlur}
           disabled={isDisabled}
           className={`relative z-20 w-full appearance-none rounded-lg border bg-transparent py-4 px-6 outline-none transition ${
-            error 
+            inputError 
               ? 'border-[#DC3545] focus:border-[#DC3545]' 
               : 'border-stroke focus:border-primary dark:border-[#2E3A47] dark:focus:border-primary'
           } ${isDisabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
@@ -62,7 +81,7 @@ export const Select = ({
           </span>
         )}
       </div>
-      {error && <p className="mt-1.5 text-sm text-[#DC3545]">{error}</p>}
+      {inputError && <p className="mt-1.5 text-sm text-[#DC3545]">{inputError}</p>}
     </div>
   );
 };

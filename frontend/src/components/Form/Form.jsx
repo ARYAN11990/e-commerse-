@@ -3,11 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const FormContext = createContext(null);
 
 export const useFormContext = () => {
-  const context = useContext(FormContext);
-  if (!context) {
-    throw new Error('Form fields must be used within a <Form> component');
-  }
-  return context;
+  return useContext(FormContext) || null;
 };
 
 export const Form = ({ 
